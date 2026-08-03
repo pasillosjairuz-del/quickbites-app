@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  ACTIONS_NODE_OPTION: --no-warnings
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
