@@ -24,7 +24,6 @@ jobs:
 
       - name: Test Migrations Locally
         run: |
-          supabase init
           supabase start
           supabase db reset
 
