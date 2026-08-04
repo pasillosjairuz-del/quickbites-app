@@ -1,4 +1,4 @@
-name: Supabase Database CI/CD Pipeline
+name: Supabase Database Sync
 
 on:
   push:
@@ -9,11 +9,11 @@ on:
       - main
 
 jobs:
-  # JOB 1: Test migrations locally inside GitHub Actions on PRs
+  # Job 1: Test migrations on PRs
   test-migrations:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
       - name: Setup Supabase CLI
@@ -21,19 +21,19 @@ jobs:
         with:
           version: latest
 
-      - name: Start Local Supabase Test Environment
-        run: supabase start
+      - name: Test Migrations Locally
+        run: |
+          supabase init
+          supabase start
+          supabase db reset
 
-      - name: Verify SQL Migrations Run Cleanly
-        run: supabase db reset
-
-  # JOB 2: Deploy migrations to Supabase Cloud on Push/Merge to Main
-  deploy-to-cloud:
+  # Job 2: Deploy migrations to Supabase Cloud on Push to Main
+  deploy-to-supabase-cloud:
     needs: test-migrations
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
       - name: Setup Supabase CLI
@@ -41,7 +41,7 @@ jobs:
         with:
           version: latest
 
-      - name: Push Migrations to Supabase Cloud
+      - name: Push Migrations to Cloud Database
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
