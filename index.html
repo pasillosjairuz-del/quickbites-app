@@ -18,13 +18,17 @@
   <div class="card">
     <h3>📱 Student Ordering</h3>
     <p>Browse today's menu and order food for pick-up.</p>
-    <button onclick="alert('Student Order Flow Coming Soon!')">Go to Student Menu</button>
+    <button id="student-order-btn">Go to Student Menu</button>
   </div>
 
   <div class="card">
     <h3>🏪 Merchant Inventory</h3>
     <p>Add new food items and manage student pick-up orders.</p>
-    <button onclick="alert('Merchant Portal Coming Soon!')">Go to Merchant Dashboard</button>
+    <button id="merchant-dashboard-btn">Go to Merchant Dashboard</button>
   </div>
+
+  <p id="app-status" style="font-size: 0.95rem; color: #555;">Loading...</p>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
