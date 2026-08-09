@@ -9,11 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.45.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+=======
+    "@supabase/supabase-js": "^2.112.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@supabase/cli": "1.0.0",
+>>>>>>> origin/develop
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.4"
   }
