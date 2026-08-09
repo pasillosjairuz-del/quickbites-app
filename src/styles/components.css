@@ -1,0 +1,408 @@
+/* Shared stylesheet for every component and page (AuthLayout, Button, FormField,
+   MenuCard, Pagination, Login, ForgotPassword, AllMenu). Kept as one file on purpose. */
+
+/* ---------- Button ---------- */
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: var(--qb-radius-md);
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-gold {
+  background: var(--qb-gold);
+  color: var(--qb-text-heading);
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: var(--qb-gold-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--qb-green-accent);
+  color: var(--qb-green-accent);
+}
+
+/* ---------- FormField ---------- */
+.form-field {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--qb-text-heading);
+  margin-bottom: 6px;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--qb-border-color);
+  border-radius: var(--qb-radius-sm);
+  font-size: 0.95rem;
+  background: var(--qb-card-bg);
+}
+
+.form-field input:focus {
+  outline: 2px solid var(--qb-green-accent);
+  outline-offset: 1px;
+}
+
+/* ---------- AuthLayout (Login / Forgot Password shell) ---------- */
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  display: flex;
+  width: 100%;
+  max-width: 780px;
+  min-height: 560px;
+  border-radius: var(--qb-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.auth-panel-left {
+  flex: 1 1 45%;
+  background: linear-gradient(160deg, var(--qb-green-dark), var(--qb-green-mid));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.auth-seal-placeholder {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.auth-panel-right {
+  flex: 1 1 55%;
+  background: var(--qb-cream);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.auth-brand {
+  margin-bottom: 20px;
+}
+
+.auth-brand-name {
+  display: block;
+  font-family: var(--qb-font-heading);
+  font-size: 1.8rem;
+  color: var(--qb-green-accent);
+}
+
+.auth-brand-sub {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--qb-text-body);
+}
+
+.auth-heading {
+  font-family: var(--qb-font-heading);
+  font-size: 1.6rem;
+  color: var(--qb-text-heading);
+  margin: 0 0 4px;
+}
+
+.auth-subheading,
+.auth-subtext {
+  font-size: 0.85rem;
+  color: var(--qb-text-body);
+  margin: 0 0 16px;
+}
+
+.auth-register-text {
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
+  margin: 0 0 20px;
+}
+
+.auth-inline-link {
+  color: var(--qb-green-accent);
+  font-weight: 600;
+}
+
+.auth-link {
+  color: var(--qb-green-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-panel-right form {
+  width: 100%;
+  max-width: 320px;
+}
+
+.auth-links-row {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.auth-error {
+  color: #B3261E;
+  font-size: 0.8rem;
+  margin: -8px 0 16px;
+}
+
+.auth-status {
+  color: var(--qb-green-accent);
+  font-size: 0.8rem;
+  margin: -8px 0 16px;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
+}
+
+/* ---------- All Menu page ---------- */
+.menu-page {
+  min-height: 100vh;
+  padding: 32px 40px 56px;
+}
+
+.menu-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.menu-page-title {
+  font-family: var(--qb-font-heading);
+  font-size: 2.4rem;
+  color: var(--qb-text-heading);
+  margin: 0;
+}
+
+.menu-hamburger-btn {
+  border: 1px solid var(--qb-border-color);
+  background: var(--qb-card-bg);
+  border-radius: var(--qb-radius-sm);
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  border: 1px solid var(--qb-border-color);
+  border-radius: var(--qb-radius-md);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 900px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- MenuCard ---------- */
+.menu-card {
+  background: var(--qb-card-bg);
+  border-radius: var(--qb-radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-card-image {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, var(--qb-green-mid), var(--qb-gold));
+  opacity: 0.85;
+}
+
+.menu-card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--qb-badge-available);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.menu-card-badge-unavailable {
+  background: var(--qb-badge-unavailable);
+}
+
+.menu-card-name-overlay {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.menu-card-body {
+  padding: 12px 14px 14px;
+}
+
+.menu-card-price {
+  color: var(--qb-green-accent);
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.menu-card-desc {
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
+  margin: 0 0 10px;
+  min-height: 2.6em;
+}
+
+.menu-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-card-star {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--qb-border-color);
+  cursor: pointer;
+}
+
+.menu-card-star-active {
+  color: var(--qb-gold);
+}
+
+.menu-card-add-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.menu-card-add {
+  background: #E0532A;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu-card-add:disabled {
+  background: var(--qb-badge-unavailable);
+  cursor: not-allowed;
+}
+
+.menu-card-qty-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--qb-text-heading);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 999px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.pagination-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pagination-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--qb-badge-unavailable);
+  display: inline-block;
+}
+
+.pagination-dot-active {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--qb-green-accent);
+}
+
+.pagination-arrows {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--qb-green-accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.pagination-arrow:disabled {
+  background: var(--qb-badge-unavailable);
+  cursor: not-allowed;
+}
