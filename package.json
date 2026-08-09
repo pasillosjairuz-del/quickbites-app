@@ -6,16 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "supabase:start": "supabase start",
-    "supabase:reset": "supabase db reset",
-    "supabase:push": "supabase db push"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^3.0.0"
+    "@supabase/supabase-js": "^2.45.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@supabase/cli": "^1.2.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.4"
   }
 }
