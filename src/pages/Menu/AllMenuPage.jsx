@@ -15,26 +15,7 @@ export default function AllMenuPage() {
   }, [currentPage])
 
   return (
-    <div className="menu-page">
-      <div className="menu-page-header">
-        <h1 className="menu-page-title">ALL MENU</h1>
-        <button type="button" className="menu-hamburger-btn" aria-label="Open menu navigation">
-          ☰
-        </button>
-      </div>
-
-      <div className="menu-grid">
-        {pageItems.map((item) => (
-          <MenuCard key={item.id} item={item} />
-        ))}
-      </div>
-
-      <Pagination
-        pageCount={pageCount}
-        currentPage={currentPage}
-        onPrev={() => setCurrentPage((p) => Math.max(0, p - 1))}
-        onNext={() => setCurrentPage((p) => Math.min(pageCount - 1, p + 1))}
-      />
-    </div>
+    <>
+    </>
   )
 }

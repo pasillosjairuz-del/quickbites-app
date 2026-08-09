@@ -28,34 +28,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <AuthLayout>
-      <h1 className="auth-heading">FORGOT PASSWORD</h1>
-      <p className="auth-subtext">
-        Enter your school email address, and we will send you a link to reset your password.
-      </p>
-
-      <form onSubmit={handleSubmit}>
-        <FormField
-          id="email"
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="johnmichael@jrccmanila.edu.ph"
-          required
-        />
-
-        {error && <p className="auth-error">{error}</p>}
-        {status && <p className="auth-status">{status}</p>}
-
-        <Button type="submit" variant="gold" disabled={loading}>
-          {loading ? 'SENDING…' : 'SEND LINK'}
-        </Button>
-      </form>
-
-      <p className="auth-footer">
-        Remember Password? <Link to="/login" className="auth-link">LOG IN</Link>
-      </p>
-    </AuthLayout>
+    <>
+    </>
   )
 }
