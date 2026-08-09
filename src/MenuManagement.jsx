@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import jrccLogo from './jrcc.jpg';
 import quickbitesLogo from './removebg.png';
 
-// navbar
+// navbar component
 function Navbar({ activeTab, setActiveTab, cartItems = [], onOpenCart }) {
   const navItems = [
     { id: 'home', label: 'Home' },
@@ -117,7 +117,7 @@ function Navbar({ activeTab, setActiveTab, cartItems = [], onOpenCart }) {
   );
 }
 
-{/* menu component */}
+// menu component
 function MenuCard({ item, onAddToCart }) {
   const isAvailable = item?.isAvailable ?? true;
 
@@ -153,8 +153,7 @@ function MenuCard({ item, onAddToCart }) {
   );
 }
 
-{/* cart component */}
-
+// cart component
 function CartModal({ cartItems, onClose, onClearCart }) {
   const totalAmount = cartItems.reduce((total, item) => total + (parseFloat(item.price || 0) * item.quantity), 0);
 
@@ -167,7 +166,7 @@ function CartModal({ cartItems, onClose, onClearCart }) {
         </div>
 
         {cartItems.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#6b7280', margin: '24px 0' }}>HEHEHEHEHE WALA PAAAAAAAA</p>
+          <p style={{ textAlign: 'center', color: '#6b7280', margin: '24px 0' }}>HEHEHEHEHEHE WALA PAAAA</p>
         ) : (
           <div style={{ maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {cartItems.map((item) => (
@@ -206,11 +205,13 @@ function CartModal({ cartItems, onClose, onClearCart }) {
   );
 }
 
-{/* ALL MENU SECTION ONLY */}
+// ALL MENU SECTION ONLY
 export default function MenuManagement({ foods = [] }) {
   const [activeTab, setActiveTab] = useState('all-menu');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const menuItems = foods || [];
 
   const handleAddToCart = (foodItem) => {
     setCart((prevCart) => {
@@ -247,8 +248,6 @@ export default function MenuManagement({ foods = [] }) {
 
       {/* All Menu Section */}
       <div style={{ padding: '32px 16px', flex: 1 }}>
-        
-      
         <h1 style={{ 
           textAlign: 'center', 
           fontSize: '52px', 
@@ -263,19 +262,20 @@ export default function MenuManagement({ foods = [] }) {
         </h1>
 
         {/* dynamic foods list */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', maxWidth: '1000px', margin: '0 auto' }}>
-          {foods && foods.length > 0 ? (
-            foods.map((food, index) => (
+        {menuItems.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+            {menuItems.map((food, index) => (
               <MenuCard key={food.id || index} item={food} onAddToCart={handleAddToCart} />
-            ))
-          ) : (
-            
-            <div style={{ height: '300px' }}></div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '16px', marginTop: '40px' }}>
+            No menu items available.
+          </p>
+        )}
       </div>
 
-      {/* paa sec */}
+      {/* Footer Section */}
       <footer style={{ backgroundColor: '#216900', color: '#ffffff', padding: '40px 24px 20px 24px', marginTop: '60px' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '32px' }}>
           <div style={{ flex: '1 1 250px' }}>
