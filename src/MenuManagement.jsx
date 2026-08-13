@@ -166,7 +166,7 @@ function CartModal({ cartItems, onClose, onClearCart }) {
         </div>
 
         {cartItems.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#6b7280', margin: '24px 0' }}>HEHEHEHEHEHE WALA PAAAA</p>
+          <p style={{ textAlign: 'center', color: '#6b7280', margin: '24px 0' }}>Your cart is currently empty</p>
         ) : (
           <div style={{ maxHeight: '250px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {cartItems.map((item) => (
