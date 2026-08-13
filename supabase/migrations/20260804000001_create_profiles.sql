@@ -39,19 +39,21 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
 -- 4. Row Level Security Policies (RLS)
 
 -- Policy 1: Users can view their own profile
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile"
-  ON public.profiles
-  FOR SELECT
-  USING (auth.uid() = id);
+ON public.profiles
+FOR SELECT
+USING (auth.uid() = id);
 
 -- Policy 2: Users can update their own profile (excluding changing their role directly)
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile"
-  ON public.profiles
-  FOR UPDATE
-  USING (auth.uid() = id);
+ON public.profiles
+FOR UPDATE
+USING (auth.uid() = id);
 
 -- Policy 3: Admins have full access to view and manage all profiles
-CREATE POLICY "Admins have full access"
+DROP POLICY IF EXISTS "Admins have full access" ON public.profiles;
   ON public.profiles
   FOR ALL
   USING (
