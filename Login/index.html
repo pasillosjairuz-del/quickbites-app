@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <title>QuickBites - Login</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="login-page">
+
+    <!-- LEFT SIDE -->
+    <section class="left-panel">
+        <img src="images/jrcc-logo.png"
+             alt="Jesus Reigns Christian College"
+             class="jrcc-logo">
+    </section>
+
+    <!-- RIGHT SIDE -->
+    <section class="right-panel">
+        <div class="login-card">
+
+            <img src="images/quickbites-logo.png"
+                 alt="QuickBites by JRCC"
+                 class="quickbites-logo">
+
+            <h1>WELCOME BACK</h1>
+
+            <h2>READY TO EAT?</h2>
+
+            <p class="register-text">
+                Don't have an account?
+                <a href="#" id="registerLink">REGISTER</a>
+            </p>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <div class="input-box">
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="student@jrccmanila.edu.ph"
+                            autocomplete="email"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group password-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-box">
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="••••••••••••••••••••••"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="eye-button"
+                            id="togglePassword"
+                            aria-label="Show password">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                                <circle cx="12" cy="12" r="2.5"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <a href="#" class="forgot-password" id="forgotPassword">
+                    Forgot Password?
+                </a>
+
+                <button type="submit" class="dig-in-button">
+                <img src="images/dig-in-button.png" alt="DIG IN">
+                </button>
+
+                <p id="loginMessage" class="login-message"></p>
+
+            </form>
+        </div>
+    </section>
+
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>
