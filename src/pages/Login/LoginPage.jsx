@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import { supabase } from '../../lib/supabaseClient';
 
 // Styles
 import '/src/styles/login.css';
@@ -21,46 +20,21 @@ export default function LoginPage() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Load Google Font "Righteous" dynamically
-  useEffect(() => {
-    const fontLink = document.createElement('link');
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Righteous&display=swap';
-    fontLink.rel = 'stylesheet';
-    document.head.appendChild(fontLink);
-  }, []);
-
   // Form Submission Handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
     setLoading(true);
 
-    // Temporary Mock Login (Pang-test ng UI habang naka-comment out ang Supabase)
     setTimeout(() => {
       setLoading(false);
       navigate('/menu');
     }, 500);
-
-    /* Pag may maayos nang .env file, i-uncomment ito at i-uncomment din ang import sa Line 3:
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (signInError) {
-      setMessage(signInError.message);
-      return;
-    }
-
-    navigate('/menu');
-    */
   };
 
   return (
     <div className="login-page" style={{ backgroundImage: `url(${greenBg})` }}>
-      {/* LEFT SIDE */}
+      {/* LEFT PANEL */}
       <section className="left-panel">
         <img
           src={jrccLogo}
@@ -69,7 +43,7 @@ export default function LoginPage() {
         />
       </section>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT CREAM PANEL */}
       <section className="right-panel">
         <div className="login-card">
           <img
@@ -125,19 +99,9 @@ export default function LoginPage() {
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6Z" />
-                    <circle cx="12" cy="12" r="2.5" />
-                    {!showPassword && (
-                      <line
-                        x1="3"
-                        y1="3"
-                        x2="21"
-                        y2="21"
-                        stroke="#111"
-                        strokeWidth="2"
-                      />
-                    )}
+                  <svg viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                 </button>
               </div>
@@ -148,19 +112,17 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
 
-            {/* Submit Button */}
+            {/* DIG IN Button Image */}
             <button type="submit" className="dig-in-button" disabled={loading}>
-              <img src={digInBtnImg} alt={loading ? 'LOGGING IN...' : 'DIG IN'} />
+              <img src={digInBtnImg} alt="DIG IN" />
             </button>
 
             {/* Message Alert */}
-            <p
-              id="loginMessage"
-              className="login-message"
-              style={{ color: message.includes('Error') || message ? '#d32f2f' : '#2e7d32' }}
-            >
-              {message}
-            </p>
+            {message && (
+              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f' }}>
+                {message}
+              </p>
+            )}
           </form>
         </div>
       </section>
