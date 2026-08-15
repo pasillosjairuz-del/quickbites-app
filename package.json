@@ -6,10 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "supabase:start": "supabase start",
-    "supabase:reset": "supabase db reset",
-    "supabase:push": "supabase db push"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.2",
