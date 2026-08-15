@@ -26,7 +26,39 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-    </>
+    <AuthLayout>
+      <h1 className="auth-heading">Log In</h1>
+      <p className="auth-register-text">
+        Don&apos;t have an account?{' '}
+        <Link to="/register-user" className="auth-inline-link">
+          Register
+        </Link>
+      </p>
+      <form onSubmit={handleSubmit}>
+        <FormField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@example.com"
+          required
+        />
+        <FormField
+          id="password"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder="Password"
+          required
+        />
+        {error && <p className="auth-error">{error}</p>}
+        <Button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Log In'}
+        </Button>
+      </form>
+
+    </AuthLayout>
   )
 }
