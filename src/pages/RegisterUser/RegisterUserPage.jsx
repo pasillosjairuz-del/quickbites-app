@@ -12,6 +12,7 @@ export default function RegisterUserPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [role, setRole] = useState('student')
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
@@ -31,7 +32,7 @@ export default function RegisterUserPage() {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName, role } },
     })
     setLoading(false)
 
@@ -98,6 +99,13 @@ export default function RegisterUserPage() {
           placeholder="Confirm password"
           required
         />
+        <div className="form-field">
+          <label htmlFor="role">I am registering as</label>
+          <select id="role" value={role} onChange={(event) => setRole(event.target.value)}>
+            <option value="student">Student</option>
+            <option value="canteen">Canteen Staff</option>
+          </select>
+        </div>
         {error && <p className="auth-error">{error}</p>}
         {status && <p className="auth-status">{status}</p>}
         <Button type="submit" disabled={loading}>

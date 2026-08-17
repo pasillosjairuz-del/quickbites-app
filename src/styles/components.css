@@ -59,7 +59,8 @@
   margin-bottom: 6px;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--qb-border-color);
@@ -68,7 +69,8 @@
   background: var(--qb-card-bg);
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus {
   outline: 2px solid var(--qb-green-accent);
   outline-offset: 1px;
 }
