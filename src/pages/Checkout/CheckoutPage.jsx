@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext.jsx'
 import Button from '../../components/Button.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
   const { items, updateQuantity, clearCart } = useCart()
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [usingPlaceholder, setUsingPlaceholder] = useState(false)
   const [error, setError] = useState('')
   const [placingOrder, setPlacingOrder] = useState(false)
   const [confirmedOrder, setConfirmedOrder] = useState(null)
@@ -35,9 +37,11 @@ export default function CheckoutPage() {
       setLoading(false)
 
       if (fetchError) {
-        setError(fetchError.message)
+        setUsingPlaceholder(true)
+        setMenuItems(placeholderMenuItems.filter((item) => cartIds.includes(item.id)))
         return
       }
+      setUsingPlaceholder(false)
       setMenuItems(data)
     }
 
@@ -112,6 +116,12 @@ export default function CheckoutPage() {
   return (
     <div className="checkout-page">
       <h1 className="menu-page-title">Checkout</h1>
+
+      {usingPlaceholder && (
+        <p className="auth-status">
+          Showing sample menu items — Supabase isn't reachable, so this is placeholder data.
+        </p>
+      )}
 
       {loading ? (
         <p className="auth-status">Loading cart...</p>
