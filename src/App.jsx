@@ -1,11 +1,5 @@
-import MenuManagement from './MenuManagement';
+import AppRoutes from './routes/AppRoutes.jsx'
 
-function App() {
-  return (
-    <div>
-      <MenuManagement />
-    </div>
-  );
+export default function App() {
+  return <AppRoutes />
 }
-
-export default App;
