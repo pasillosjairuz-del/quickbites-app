@@ -154,7 +154,12 @@ export default function CanteenMenuPage() {
 
   return (
     <div className="canteen-page">
-      <h1 className="menu-page-title">Manage Menu</h1>
+      <div className="canteen-page-header">
+        <h1 className="menu-page-title">Manage Menu</h1>
+        <Link to="/canteen-orders" className="auth-inline-link">
+          View Orders
+        </Link>
+      </div>
 
       <form className="canteen-form" onSubmit={handleAddSubmit}>
         <FormField

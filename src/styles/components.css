@@ -432,6 +432,13 @@
   margin: 0 auto;
 }
 
+.canteen-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
 .canteen-form {
   background: var(--qb-card-bg);
   border: 1px solid var(--qb-border-color);
@@ -478,6 +485,17 @@
   display: flex;
   gap: 10px;
   flex-shrink: 0;
+}
+
+.canteen-order-item {
+  align-items: flex-start;
+}
+
+.canteen-order-lines {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
 }
 
 .cart-summary-link {
