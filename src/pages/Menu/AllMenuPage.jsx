@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import MenuCard from '../../components/MenuCard.jsx'
 import Pagination from '../../components/Pagination.jsx'
+import { useCart } from '../../context/CartContext.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
 
 const ITEMS_PER_PAGE = 9
 
 export default function AllMenuPage() {
+  const { totalCount } = useCart()
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -58,6 +61,11 @@ export default function AllMenuPage() {
     <div className="menu-page">
       <div className="menu-page-header">
         <h1 className="menu-page-title">All Menu</h1>
+        {totalCount > 0 && (
+          <Link to="/checkout" className="cart-summary-link">
+            🛒 {totalCount} item{totalCount > 1 ? 's' : ''} — Checkout
+          </Link>
+        )}
       </div>
 
       {error && <p className="auth-error">{error}</p>}
