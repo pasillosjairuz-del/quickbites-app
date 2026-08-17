@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext.jsx'
 import Button from '../../components/Button.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
-import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
+import { placeholderMenuItems, placeDemoOrder } from '../../data/placeholderMenuItems.js'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
@@ -62,6 +62,22 @@ export default function CheckoutPage() {
   async function handlePlaceOrder() {
     setError('')
     setPlacingOrder(true)
+
+    if (usingPlaceholder) {
+      // No Supabase project reachable — simulate the order locally so the
+      // checkout flow can be demoed end-to-end without a real login/backend.
+      try {
+        const demoOrder = placeDemoOrder(cartRows)
+        setPlacingOrder(false)
+        clearCart()
+        setConfirmedOrder(demoOrder)
+      } catch (demoError) {
+        setPlacingOrder(false)
+        setError(demoError.message)
+        setMenuItems(placeholderMenuItems.filter((item) => cartIds.includes(item.id)))
+      }
+      return
+    }
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
