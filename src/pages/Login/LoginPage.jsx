@@ -6,7 +6,6 @@ import '../../styles/login.css'
 import greenBg from '../../assets/images/green-background.png'
 import jrccLogo from '../../assets/images/jrcc-logo.png'
 import quickbitesLogo from '../../assets/images/quickbites-logo.png'
-import digInBtnImg from '../../assets/images/dig-in-button.png'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -110,7 +109,7 @@ export default function LoginPage() {
 
             {/* Yellow DIG IN Button */}
             <button type="submit" className="dig-in-button" disabled={loading}>
-              <img src={digInBtnImg} alt="DIG IN" />
+              {loading ? 'LOGGING IN...' : 'DIG IN'}
             </button>
 
             {message && (
