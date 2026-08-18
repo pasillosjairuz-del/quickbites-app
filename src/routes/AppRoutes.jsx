@@ -3,7 +3,6 @@ import LoginPage from '../pages/Login/LoginPage.jsx'
 import ForgotPasswordPage from '../pages/ForgotPassword/ForgotPasswordPage.jsx'
 import RegisterUserPage from '../pages/RegisterUser/RegisterUserPage.jsx'
 import AllMenuPage from '../pages/Menu/AllMenuPage.jsx'
-import RegisterUserPage from '../pages/RegisterUser/RegisterUserPage.jsx'
 
 export default function AppRoutes() {
   return (
