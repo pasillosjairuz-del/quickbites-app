@@ -8,7 +8,6 @@ import '/src/styles/login.css';
 import greenBg from '../../assets/images/green-background.png';
 import jrccLogo from '../../assets/images/jrcc-logo.png';
 import quickbitesLogo from '../../assets/images/quickbites-logo.png';
-import digInBtnImg from '../../assets/images/dig-in-button.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -19,6 +18,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
   // Form Submission Handler
   const handleSubmit = async (e) => {
@@ -112,10 +113,43 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
 
-            {/* DIG IN Button Image */}
-            <button type="submit" className="dig-in-button" disabled={loading}>
-              <img src={digInBtnImg} alt="DIG IN" />
-            </button>
+              {/* DIG IN BUTTON */}
+              <button
+                type="submit"
+                disabled={loading}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
+                onMouseDown={() => setIsPressed(true)}
+                onMouseUp={() => setIsPressed(false)}
+                style={{
+                  width: '260px',
+                  padding: '12px 0',
+                  margin: '15px auto 0',
+                  display: 'block',
+                  backgroundColor: isHovered ? '#FFA000' : '#FFC107',
+                  color: '#000',
+                  fontSize: '24px',
+                  fontWeight: '900',
+                  letterSpacing: '0.5px',
+                  border: '1.5px solid #000',
+                  borderRadius: '12px',
+                  boxShadow: isPressed 
+                    ? '0px 2px 6px rgba(0, 0, 0, 0.2)' 
+                    : isHovered 
+                      ? '0px 8px 20px rgba(0, 0, 0, 0.35)' 
+                      : '0px 6px 16px rgba(0, 0, 0, 0.25)',
+                  transform: isPressed 
+                    ? 'translateY(2px)' 
+                    : isHovered 
+                      ? 'translateY(-2px)' 
+                      : 'translateY(0px)',
+                  transition: 'all 0.15s ease',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase'
+                }}
+              >
+                {loading ? 'LOGGING IN...' : 'DIG IN'}
+              </button>
 
             {/* Message Alert */}
             {message && (

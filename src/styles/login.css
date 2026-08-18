@@ -198,35 +198,6 @@ form {
   font-size: 16px;
 }
 
-/* DIG IN BUTTON IMAGE */
-.dig-in-button {
-  width: 330px;
-  max-width: 90%;
-  padding: 0;
-  margin: 0 auto;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: block;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.dig-in-button img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.dig-in-button:hover img {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-}
-
-.dig-in-button:active img {
-  transform: translateY(1px);
-}
-
 /* MESSAGE */
 .login-message {
   min-height: 18px;
@@ -400,4 +371,120 @@ form {
   .dig-in-button {
     width: 90%;
   }
+
+  /* REGISTER FORM EXTRA STYLES */
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.input-sublabel {
+  display: block;
+  font-size: 11px;
+  color: #555;
+  margin-top: -6px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+@media (max-width: 700px) {
+  .form-row {
+    flex-direction: row; 
+    gap: 10px;
+  }
+}
+
+/* STYLES FOR REGISTER PAGE */
+.register-card {
+  width: min(85%, 500px) !important;
+}
+
+.register-title {
+  font-size: clamp(30px, 2.8vw, 44px) !important;
+  margin-bottom: 10px !important;
+}
+
+.form-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.form-row .flex-1 {
+  flex: 1 !important;
+}
+
+.input-sublabel {
+  display: block;
+  font-size: 11px;
+  color: #555;
+  margin-top: -4px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.signup-btn-custom {
+  width: 260px;
+  height: 52px;
+  margin: 16px auto 0;
+  display: block;
+  background-color: #ffc107;
+  color: #000;
+  font-family: 'Righteous', cursive, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  border: 2px solid #000;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #000;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.signup-btn-custom:hover {
+  background-color: #ffb300;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #000;
+}
+
+.signup-btn-custom:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #000;
+}
+
+/* SIGN UP & DIG IN BUTTON ANIMATIONS */
+.signup-btn {
+  width: 240px !important;
+  padding: 12px 0 !important;
+  margin: 15px auto 0 !important;
+  display: block !important;
+  background-color: #FFC107 !important;
+  color: #000 !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  border: 2px solid #000 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 0px #000 !important;
+  cursor: pointer !important;
+  text-transform: uppercase !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* Hover Effect */
+.signup-btn:hover {
+  background-color: #FFB300 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0px 6px 0px #000 !important;
+}
+
+/* Click/Active Effect */
+.signup-btn:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0px 1px 0px #000 !important;
+}
 }
