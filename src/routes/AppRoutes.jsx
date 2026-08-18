@@ -9,6 +9,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterUserPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/register-user" element={<RegisterUserPage />} />
       <Route path="/menu" element={<AllMenuPage />} />
