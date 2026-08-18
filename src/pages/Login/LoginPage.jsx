@@ -1,41 +1,36 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-// Styles
-import '/src/styles/login.css';
+import '../../styles/login.css'
 
-// Assets
-import greenBg from '../../assets/images/green-background.png';
-import jrccLogo from '../../assets/images/jrcc-logo.png';
-import quickbitesLogo from '../../assets/images/quickbites-logo.png';
+import greenBg from '../../assets/images/green-background.png'
+import jrccLogo from '../../assets/images/jrcc-logo.png'
+import quickbitesLogo from '../../assets/images/quickbites-logo.png'
+import digInBtnImg from '../../assets/images/dig-in-button.png'
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  // States
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  // Form Submission Handler
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    setLoading(true);
+    e.preventDefault()
+    setMessage('')
+    setLoading(true)
 
     setTimeout(() => {
-      setLoading(false);
-      navigate('/menu');
-    }, 500);
-  };
+      setLoading(false)
+      navigate('/menu')
+    }, 500)
+  }
 
   return (
     <div className="login-page" style={{ backgroundImage: `url(${greenBg})` }}>
-      {/* LEFT PANEL */}
+      {/* Left Panel - JRCC Crest */}
       <section className="left-panel">
         <img
           src={jrccLogo}
@@ -44,7 +39,7 @@ export default function LoginPage() {
         />
       </section>
 
-      {/* RIGHT CREAM PANEL */}
+      {/* Right Cream Container */}
       <section className="right-panel">
         <div className="login-card">
           <img
@@ -100,7 +95,7 @@ export default function LoginPage() {
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <svg viewBox="0 0 24 24">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
@@ -108,50 +103,16 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Forgot Password */}
+            {/* Forgot Password Route Link */}
             <Link to="/forgot-password" className="forgot-password" id="forgotPassword">
               Forgot Password?
             </Link>
 
-              {/* DIG IN BUTTON */}
-              <button
-                type="submit"
-                disabled={loading}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
-                onMouseDown={() => setIsPressed(true)}
-                onMouseUp={() => setIsPressed(false)}
-                style={{
-                  width: '260px',
-                  padding: '12px 0',
-                  margin: '15px auto 0',
-                  display: 'block',
-                  backgroundColor: isHovered ? '#FFA000' : '#FFC107',
-                  color: '#000',
-                  fontSize: '24px',
-                  fontWeight: '900',
-                  letterSpacing: '0.5px',
-                  border: '1.5px solid #000',
-                  borderRadius: '12px',
-                  boxShadow: isPressed 
-                    ? '0px 2px 6px rgba(0, 0, 0, 0.2)' 
-                    : isHovered 
-                      ? '0px 8px 20px rgba(0, 0, 0, 0.35)' 
-                      : '0px 6px 16px rgba(0, 0, 0, 0.25)',
-                  transform: isPressed 
-                    ? 'translateY(2px)' 
-                    : isHovered 
-                      ? 'translateY(-2px)' 
-                      : 'translateY(0px)',
-                  transition: 'all 0.15s ease',
-                  cursor: 'pointer',
-                  textTransform: 'uppercase'
-                }}
-              >
-                {loading ? 'LOGGING IN...' : 'DIG IN'}
-              </button>
+            {/* Yellow DIG IN Button */}
+            <button type="submit" className="dig-in-button" disabled={loading}>
+              <img src={digInBtnImg} alt="DIG IN" />
+            </button>
 
-            {/* Message Alert */}
             {message && (
               <p id="loginMessage" className="login-message" style={{ color: '#d32f2f' }}>
                 {message}
@@ -161,5 +122,5 @@ export default function LoginPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }
