@@ -1,14 +1,6 @@
--- ==========================================
--- REVISION LOG: 
--- - Updated role column to use app_role ENUM (student, instructor, staff, admin)
--- - Added helper function `is_admin_or_staff()` to prevent RLS infinite recursion loops
--- - Added DROP POLICY IF EXISTS guards for idempotent local db resets
--- ==========================================
-
 -- 1. EXTENSIONS & ENUMS
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Define custom app roles (including canteen staff)
 DO $$ BEGIN
   CREATE TYPE public.app_role AS ENUM ('student', 'instructor', 'staff', 'admin');
 EXCEPTION
@@ -29,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- 3. RLS HELPER FUNCTION (Prevents Infinite Recursion Loops)
+-- 3. RLS HELPER FUNCTION
 CREATE OR REPLACE FUNCTION public.is_admin_or_staff()
 RETURNS BOOLEAN AS $$
 BEGIN

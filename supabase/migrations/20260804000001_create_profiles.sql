@@ -40,13 +40,3 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
---  Row Level Security Policies (RLS) (*REMOVED POLICY* DUPLICATED)
-
--- Policy 1: Users can view their own profile(*REMOVED POLICY* DUPLICATED)
-
-
--- Policy 2: Users can update their own profile (*REMOVED POLICY* DUPLICATED)
-
-
--- Policy 3: Admins have full access to view and manage all profiles (*REMOVED POLICY* DUPLICATED)
