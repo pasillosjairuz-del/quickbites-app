@@ -52,3 +52,32 @@ export const placeholderMenuItems = [
     serving_count: 15,
   },
 ]
+
+// Simulates place_order() locally when Supabase isn't reachable, so the
+// checkout flow can be demoed end-to-end (including stock decreasing)
+// without a live backend or a logged-in session. Validates every row before
+// applying any change, mirroring the real RPC's all-or-nothing behavior.
+// Mutates the module-level array in place, so the effect only lasts for the
+// current page session — reload resets the sample stock.
+export function placeDemoOrder(cartRows) {
+  for (const row of cartRows) {
+    const item = placeholderMenuItems.find((candidate) => candidate.id === row.id)
+    if (!item || item.serving_count < row.quantity) {
+      throw new Error(`Not enough servings available for ${item ? item.name : row.id}`)
+    }
+  }
+
+  let totalAmount = 0
+  for (const row of cartRows) {
+    const item = placeholderMenuItems.find((candidate) => candidate.id === row.id)
+    item.serving_count -= row.quantity
+    item.is_available = item.serving_count > 0
+    totalAmount += item.price * row.quantity
+  }
+
+  return {
+    id: `demo-${Date.now()}`,
+    total_amount: totalAmount,
+    status: 'pending',
+  }
+}
