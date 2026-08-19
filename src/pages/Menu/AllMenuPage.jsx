@@ -1,14 +1,29 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import MenuCard from '../../components/MenuCard.jsx'
 import Pagination from '../../components/Pagination.jsx'
+import { useCart } from '../../context/CartContext.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
 
 const ITEMS_PER_PAGE = 9
 
+function toCardItem(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    price: row.price,
+    description: row.description,
+    available: row.is_available,
+    servingCount: row.serving_count,
+  }
+}
+
 export default function AllMenuPage() {
+  const { totalCount } = useCart()
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [usingPlaceholder, setUsingPlaceholder] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
 
   useEffect(() => {
@@ -16,7 +31,6 @@ export default function AllMenuPage() {
 
     async function loadMenuItems() {
       setLoading(true)
-      setError('')
       const { data, error: fetchError } = await supabase
         .from('menu_items')
         .select('*')
@@ -26,20 +40,13 @@ export default function AllMenuPage() {
       setLoading(false)
 
       if (fetchError) {
-        setError(fetchError.message)
+        setUsingPlaceholder(true)
+        setMenuItems(placeholderMenuItems.map(toCardItem))
         return
       }
 
-      setMenuItems(
-        data.map((row) => ({
-          id: row.id,
-          name: row.name,
-          price: row.price,
-          description: row.description,
-          available: row.is_available,
-          servingCount: row.serving_count,
-        })),
-      )
+      setUsingPlaceholder(false)
+      setMenuItems(data.map(toCardItem))
     }
 
     loadMenuItems()
@@ -58,9 +65,18 @@ export default function AllMenuPage() {
     <div className="menu-page">
       <div className="menu-page-header">
         <h1 className="menu-page-title">All Menu</h1>
+        {totalCount > 0 && (
+          <Link to="/checkout" className="cart-summary-link">
+            🛒 {totalCount} item{totalCount > 1 ? 's' : ''} — Checkout
+          </Link>
+        )}
       </div>
 
-      {error && <p className="auth-error">{error}</p>}
+      {usingPlaceholder && (
+        <p className="auth-status">
+          Showing sample menu items — Supabase isn't reachable, so this is placeholder data.
+        </p>
+      )}
 
       {loading ? (
         <p className="auth-status">Loading menu...</p>
