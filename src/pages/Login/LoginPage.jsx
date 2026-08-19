@@ -22,20 +22,95 @@ export default function LoginPage() {
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
-  // Form Submission Handler
-  const handleSubmit = async (e) => {
+  // Dig In Button Click Handler
+  const handleLogin = (e) => {
     e.preventDefault();
+    
+    // Basic validation check
+    if (!email || !password) {
+      setMessage('Please fill in all fields.');
+      return;
+    }
+
     setMessage('');
     setLoading(true);
 
+    // Show loading screen for 2 seconds before navigating to /menu
     setTimeout(() => {
       setLoading(false);
       navigate('/menu');
-    }, 500);
+    }, 2000);
   };
 
   return (
-    <div className="login-page" style={{ backgroundImage: `url(${greenBg})` }}>
+    <div className="login-page" style={{ backgroundImage: `url(${greenBg})`, position: 'relative' }}>
+      
+      {/* FULL SCREEN LOADING OVERLAY */}
+      {loading && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundImage: `url(${greenBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999999,
+            gap: '25px'
+          }}
+        >
+          {/* Logo with Thick Dark Green Spinner Ring */}
+          <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div 
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                border: '18px solid #0f3a15',              // Dark base green ring
+                borderTop: '18px solid #07220b',           // Darker green spinner segment
+                animation: 'spin 1.2s linear infinite'
+              }}
+            />
+            <img 
+              src={jrccLogo} 
+              alt="JRCC Logo" 
+              style={{ 
+                width: '184px', 
+                height: '184px', 
+                objectFit: 'contain', 
+                borderRadius: '50%',
+                position: 'relative',
+                zIndex: 2
+              }} 
+            />
+          </div>
+
+          {/* QuickBites Logo */}
+          <img 
+            src={quickbitesLogo} 
+            alt="QuickBites Logo" 
+            style={{ width: '250px', objectFit: 'contain' }} 
+          />
+
+          {/* Inline keyframes*/}
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      )}
+
       {/* LEFT PANEL */}
       <section className="left-panel">
         <img
@@ -64,7 +139,7 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          <form id="loginForm" onSubmit={handleSubmit}>
+          <form id="loginForm" onSubmit={handleLogin}>
             {/* Email Field */}
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
@@ -150,12 +225,12 @@ export default function LoginPage() {
                 textTransform: 'uppercase'
               }}
             >
-              {loading ? 'LOGGING IN...' : 'DIG IN'}
+              DIG IN
             </button>
 
             {/* Message Alert */}
             {message && (
-              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f' }}>
+              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f', textAlign: 'center', marginTop: '10px' }}>
                 {message}
               </p>
             )}
