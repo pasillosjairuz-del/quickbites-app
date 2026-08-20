@@ -67,29 +67,49 @@ export default function LoginPage() {
             gap: '25px'
           }}
         >
-          {/* Logo with Thick Dark Green Spinner Ring */}
+          {/* Integrated Logo and Spinner Container */}
           <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            
+            {/* Base Dark Green Track (#103820) */}
             <div 
               style={{
                 position: 'absolute',
-                width: '100%',
-                height: '100%',
+                width: '220px',
+                height: '220px',
                 borderRadius: '50%',
-                border: '18px solid #0f3a15',              // Dark base green ring
-                borderTop: '18px solid #07220b',           // Darker green spinner segment
-                animation: 'spin 1.2s linear infinite'
+                border: '20px solid #103820',
+                boxSizing: 'border-box'
               }}
             />
+
+            {/* Active Rotating Green Spinner (#277C00) */}
+            <div 
+              style={{
+                position: 'absolute',
+                width: '220px',
+                height: '220px',
+                borderRadius: '50%',
+                border: '20px solid transparent',
+                borderTop: '20px solid #277C00',
+                borderRight: '20px solid #277C00',
+                boxSizing: 'border-box',
+                animation: 'spin 1.2s linear infinite',
+                zIndex: 2
+              }}
+            />
+
+            {/* JRCC Logo - Expanded to perfectly fit inner border (180px x 180px) */}
             <img 
               src={jrccLogo} 
               alt="JRCC Logo" 
               style={{ 
-                width: '184px', 
-                height: '184px', 
-                objectFit: 'contain', 
+                width: '180px', 
+                height: '180px', 
+                objectFit: 'cover', 
                 borderRadius: '50%',
                 position: 'relative',
-                zIndex: 2
+                zIndex: 3,
+                boxShadow: '0 0 0 1px #103820' // Eliminates pixel gaps
               }} 
             />
           </div>
@@ -101,7 +121,7 @@ export default function LoginPage() {
             style={{ width: '250px', objectFit: 'contain' }} 
           />
 
-          {/* Inline keyframes*/}
+          {/* Inline keyframes para sa spinner */}
           <style>{`
             @keyframes spin {
               0% { transform: rotate(0deg); }
