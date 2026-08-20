@@ -15,11 +15,12 @@ export default function RegisterUserPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('Student'); // Added role state
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Hover
+  // Hover & Press states
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
@@ -29,6 +30,7 @@ export default function RegisterUserPage() {
       setMessage('Passwords do not match.');
       return;
     }
+    setMessage('');
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -183,6 +185,32 @@ export default function RegisterUserPage() {
                   boxSizing: 'border-box'
                 }}
               />
+            </div>
+
+            {/* ROLE / I AM REGISTERING AS DROPDOWN */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+                I am registering as
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  border: '1.5px solid #000',
+                  fontSize: '14px',
+                  outline: 'none',
+                  backgroundColor: '#fff',
+                  cursor: 'pointer',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <option value="Student">Student</option>
+                <option value="Canteen Staff">Canteen Staff</option>
+              </select>
             </div>
 
             {/* SIGN UP BUTTON */}
