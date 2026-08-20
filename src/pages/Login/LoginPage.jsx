@@ -98,7 +98,7 @@ export default function LoginPage() {
               }}
             />
 
-            {/* JRCC Logo - Expanded to perfectly fit inner border (180px x 180px) */}
+            {/* JRCC Logo (180px x 180px) */}
             <img 
               src={jrccLogo} 
               alt="JRCC Logo" 
@@ -109,7 +109,7 @@ export default function LoginPage() {
                 borderRadius: '50%',
                 position: 'relative',
                 zIndex: 3,
-                boxShadow: '0 0 0 1px #103820' // Eliminates pixel gaps
+                boxShadow: '0 0 0 1px #103820' 
               }} 
             />
           </div>
@@ -121,7 +121,7 @@ export default function LoginPage() {
             style={{ width: '250px', objectFit: 'contain' }} 
           />
 
-          {/* Inline keyframes para sa spinner */}
+          {/* Inline keyframes */}
           <style>{`
             @keyframes spin {
               0% { transform: rotate(0deg); }
