@@ -108,7 +108,23 @@ export default function LoginPage() {
             </Link>
 
             {/* Yellow DIG IN Button */}
-            <button type="submit" className="dig-in-button" disabled={loading}>
+            <button
+              type="submit"
+              className="dig-in-button"
+              disabled={loading}
+              style={{
+                backgroundColor: '#ffb703',
+                color: '#000',
+                fontWeight: 'bold',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px',
+                width: '100%',
+                marginTop: '16px',
+                cursor: 'pointer',
+                fontSize: '16px',
+              }}
+            >
               {loading ? 'LOGGING IN...' : 'DIG IN'}
             </button>
 
