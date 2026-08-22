@@ -17,6 +17,11 @@ export default function MenuCard({ item }) {
       <div className="menu-card-body">
         <p className="menu-card-price">₱{item.price}</p>
         <p className="menu-card-desc">{item.description}</p>
+        {typeof item.servingCount === 'number' && (
+          <p className="menu-card-servings">
+            {item.servingCount > 0 ? `${item.servingCount} servings left` : 'Sold out'}
+          </p>
+        )}
         <div className="menu-card-footer">
           <button
             type="button"
