@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { supabase } from '../../lib/supabaseClient'
 
 import '../../styles/login.css'
 
@@ -21,10 +22,19 @@ export default function LoginPage() {
     setMessage('')
     setLoading(true)
 
-    setTimeout(() => {
-      setLoading(false)
+    // Authenticate user against Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+
+    setLoading(false)
+
+    if (error) {
+      setMessage(error.message)
+    } else if (data?.user) {
       navigate('/menu')
-    }, 500)
+    }
   }
 
   return (
@@ -129,7 +139,7 @@ export default function LoginPage() {
             </button>
 
             {message && (
-              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f' }}>
+              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f', marginTop: '12px' }}>
                 {message}
               </p>
             )}
