@@ -2,13 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 
-<<<<<<< HEAD
+import '../../styles/components.css'
 import '../../styles/login.css'
-=======
-// Styles
-import '../../styles/components.css';
-import '../../styles/login.css';
->>>>>>> origin/develop
 
 import greenBg from '../../assets/images/green-background.png'
 import jrccLogo from '../../assets/images/jrcc-logo.png'
@@ -23,7 +18,6 @@ export default function LoginPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
-<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault()
     setMessage('')
@@ -47,118 +41,6 @@ export default function LoginPage() {
   return (
     <div className="login-page" style={{ backgroundImage: `url(${greenBg})` }}>
       {/* Left Panel - JRCC Crest */}
-=======
-  // Dig In Button Click Handler
-  const handleLogin = (e) => {
-    e.preventDefault();
-    
-    // Basic validation check
-    if (!email || !password) {
-      setMessage('Please fill in all fields.');
-      return;
-    }
-
-    setMessage('');
-    setLoading(true);
-
-    // Show loading screen for 2 seconds before navigating to /menu
-    setTimeout(() => {
-      setLoading(false);
-      navigate('/menu');
-    }, 2000);
-  };
-
-  return (
-    <div className="login-page" style={{ backgroundImage: `url(${greenBg})`, position: 'relative' }}>
-      
-      {/* FULL SCREEN LOADING OVERLAY */}
-      {loading && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundImage: `url(${greenBg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 999999,
-            gap: '25px'
-          }}
-        >
-          {/* Integrated Logo and Spinner Container */}
-          <div style={{ position: 'relative', width: '220px', height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            
-            {/* Base Dark Green Track (#103820) */}
-            <div 
-              style={{
-                position: 'absolute',
-                width: '220px',
-                height: '220px',
-                borderRadius: '50%',
-                border: '20px solid #103820',
-                boxSizing: 'border-box'
-              }}
-            />
-
-            {/* Active Rotating Green Spinner (#277C00) */}
-            <div 
-              style={{
-                position: 'absolute',
-                width: '220px',
-                height: '220px',
-                borderRadius: '50%',
-                border: '20px solid transparent',
-                borderTop: '20px solid #277C00',
-                borderRight: '20px solid #277C00',
-                boxSizing: 'border-box',
-                animation: 'spin 1.2s linear infinite',
-                zIndex: 2
-              }}
-            />
-
-            {/* JRCC Logo (180px x 180px) */}
-            <img 
-              src={jrccLogo} 
-              alt="JRCC Logo" 
-              style={{ 
-                width: '180px', 
-                height: '180px', 
-                objectFit: 'cover', 
-                borderRadius: '50%',
-                position: 'relative',
-                zIndex: 3,
-                boxShadow: '0 0 0 1px #103820' 
-              }} 
-            />
-          </div>
-
-          {/* QuickBites Logo */}
-          <img 
-            src={quickbitesLogo} 
-            alt="QuickBites Logo" 
-            style={{ width: '250px', objectFit: 'contain' }} 
-          />
-
-          {/* Inline keyframes */}
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
-        </div>
-      )}
-
-      {/* LEFT PANEL */}
->>>>>>> origin/develop
       <section className="left-panel">
         <img
           src={jrccLogo}
@@ -186,7 +68,7 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          <form id="loginForm" onSubmit={handleLogin}>
+          <form id="loginForm" onSubmit={handleSubmit}>
             {/* Email Field */}
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
@@ -236,7 +118,6 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
 
-<<<<<<< HEAD
             {/* Yellow DIG IN Button */}
             <button
               type="submit"
@@ -256,53 +137,10 @@ export default function LoginPage() {
               }}
             >
               {loading ? 'LOGGING IN...' : 'DIG IN'}
-=======
-            {/* DIG IN BUTTON */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="submit-btn"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
-              onMouseDown={() => setIsPressed(true)}
-              onMouseUp={() => setIsPressed(false)}
-              style={{
-                width: '260px',
-                padding: '12px 0',
-                margin: '15px auto 0',
-                display: 'block',
-                backgroundColor: isHovered ? '#FFA000' : '#FFC107',
-                color: '#000',
-                fontSize: '24px',
-                fontWeight: '900',
-                letterSpacing: '0.5px',
-                border: '1.5px solid #000',
-                borderRadius: '12px',
-                boxShadow: isPressed 
-                  ? '0px 2px 6px rgba(0, 0, 0, 0.2)' 
-                  : isHovered 
-                    ? '0px 8px 20px rgba(0, 0, 0, 0.35)' 
-                    : '0px 6px 16px rgba(0, 0, 0, 0.25)',
-                transform: isPressed 
-                  ? 'translateY(2px)' 
-                  : isHovered 
-                    ? 'translateY(-2px)' 
-                    : 'translateY(0px)',
-                transition: 'all 0.15s ease',
-                cursor: 'pointer',
-                textTransform: 'uppercase'
-              }}
-            >
-              DIG IN
->>>>>>> origin/develop
             </button>
 
             {message && (
-<<<<<<< HEAD
               <p id="loginMessage" className="login-message" style={{ color: '#d32f2f', marginTop: '12px' }}>
-=======
-              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f', textAlign: 'center', marginTop: '10px' }}>
->>>>>>> origin/develop
                 {message}
               </p>
             )}
