@@ -1,64 +1,152 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import AuthLayout from '../../components/AuthLayout.jsx'
-import FormField from '../../components/FormField.jsx'
-import Button from '../../components/Button.jsx'
-import { supabase } from '../../lib/supabaseClient.js'
+import { supabase } from '../../lib/supabaseClient'
+
+import '../../styles/components.css'
+import '../../styles/login.css'
+
+import greenBg from '../../assets/images/green-background.png'
+import jrccLogo from '../../assets/images/jrcc-logo.png'
+import quickbitesLogo from '../../assets/images/quickbites-logo.png'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setError('')
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setMessage('')
     setLoading(true)
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+
+    // Authenticate user against Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+
     setLoading(false)
-    if (signInError) {
-      setError(signInError.message)
-      return
+
+    if (error) {
+      setMessage(error.message)
+    } else if (data?.user) {
+      navigate('/menu')
     }
-    navigate('/menu')
   }
 
   return (
-    <AuthLayout>
-      <h1 className="auth-heading">Log In</h1>
-      <p className="auth-register-text">
-        Don&apos;t have an account?{' '}
-        <Link to="/register-user" className="auth-inline-link">
-          Register
-        </Link>
-      </p>
-      <form onSubmit={handleSubmit}>
-        <FormField
-          id="email"
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="you@example.com"
-          required
+    <div className="login-page" style={{ backgroundImage: `url(${greenBg})` }}>
+      {/* Left Panel - JRCC Crest */}
+      <section className="left-panel">
+        <img
+          src={jrccLogo}
+          alt="Jesus Reigns Christian College"
+          className="jrcc-logo"
         />
-        <FormField
-          id="password"
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Password"
-          required
-        />
-        {error && <p className="auth-error">{error}</p>}
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log In'}
-        </Button>
-      </form>
+      </section>
 
-    </AuthLayout>
+      {/* Right Cream Container */}
+      <section className="right-panel">
+        <div className="login-card">
+          <img
+            src={quickbitesLogo}
+            alt="QuickBites by JRCC"
+            className="quickbites-logo"
+          />
+
+          <h1>WELCOME BACK</h1>
+          <h2>READY TO EAT?</h2>
+
+          <p className="register-text">
+            Don't have an account?{' '}
+            <Link to="/register" id="registerLink">
+              REGISTER
+            </Link>
+          </p>
+
+          <form id="loginForm" onSubmit={handleSubmit}>
+            {/* Email Field */}
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <div className="input-box">
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="student@jrccmanila.edu.ph"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="form-group password-group">
+              <label htmlFor="password">Password</label>
+              <div className="input-box">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  placeholder="••••••••••••••••••••••"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="eye-button"
+                  id="togglePassword"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Forgot Password Route Link */}
+            <Link to="/forgot-password" className="forgot-password" id="forgotPassword">
+              Forgot Password?
+            </Link>
+
+            {/* Yellow DIG IN Button */}
+            <button
+              type="submit"
+              className="dig-in-button"
+              disabled={loading}
+              style={{
+                backgroundColor: '#ffb703',
+                color: '#000',
+                fontWeight: 'bold',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px',
+                width: '100%',
+                marginTop: '16px',
+                cursor: 'pointer',
+                fontSize: '16px',
+              }}
+            >
+              {loading ? 'LOGGING IN...' : 'DIG IN'}
+            </button>
+
+            {message && (
+              <p id="loginMessage" className="login-message" style={{ color: '#d32f2f', marginTop: '12px' }}>
+                {message}
+              </p>
+            )}
+          </form>
+        </div>
+      </section>
+    </div>
   )
 }

@@ -416,3 +416,134 @@
   background: var(--qb-badge-unavailable);
   cursor: not-allowed;
 }
+
+.menu-card-servings {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--qb-text-body);
+  margin: -6px 0 10px;
+}
+
+/* ---------- Canteen menu management ---------- */
+.canteen-page {
+  min-height: 100vh;
+  padding: 32px 40px 56px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.canteen-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.canteen-form {
+  background: var(--qb-card-bg);
+  border: 1px solid var(--qb-border-color);
+  border-radius: var(--qb-radius-md);
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.canteen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.canteen-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--qb-card-bg);
+  border: 1px solid var(--qb-border-color);
+  border-radius: var(--qb-radius-md);
+  padding: 14px 18px;
+}
+
+.canteen-item-editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.canteen-item-name {
+  font-weight: 700;
+  color: var(--qb-text-heading);
+  margin: 0 0 4px;
+}
+
+.canteen-item-meta {
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
+  margin: 0;
+}
+
+.canteen-item-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.canteen-order-item {
+  align-items: flex-start;
+}
+
+.canteen-order-lines {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--qb-text-body);
+}
+
+.cart-summary-link {
+  background: var(--qb-green-accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+/* ---------- Checkout ---------- */
+.checkout-page {
+  min-height: 100vh;
+  padding: 32px 40px 56px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.checkout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--qb-card-bg);
+  border: 1px solid var(--qb-border-color);
+  border-radius: var(--qb-radius-md);
+  padding: 14px 18px;
+}
+
+.checkout-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.checkout-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--qb-text-heading);
+  margin: 0 0 16px;
+}
