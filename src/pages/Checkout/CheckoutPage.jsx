@@ -63,28 +63,32 @@ export default function CheckoutPage() {
     setError('')
     setPlacingOrder(true)
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError) throw userError
+      if (!user) {
+        setError('You need to log in before placing an order.')
+        return
+      }
+
+      const { data: order, error: placeError } = await supabase.rpc('place_order', {
+        cart_items: cartRows.map((row) => ({ menu_item_id: row.id, quantity: row.quantity })),
+      })
+
+      if (placeError) {
+        setError(placeError.message)
+        const { data: refreshed } = await supabase.from('menu_items').select('*').in('id', cartIds)
+        if (refreshed) setMenuItems(refreshed)
+        return
+      }
+
+      clearCart()
+      setConfirmedOrder(order)
+    } catch {
+      setError("Can't reach Supabase right now. Please try again once the connection is back.")
+    } finally {
       setPlacingOrder(false)
-      setError('You need to log in before placing an order.')
-      return
     }
-
-    const { data: order, error: placeError } = await supabase.rpc('place_order', {
-      cart_items: cartRows.map((row) => ({ menu_item_id: row.id, quantity: row.quantity })),
-    })
-
-    setPlacingOrder(false)
-
-    if (placeError) {
-      setError(placeError.message)
-      const { data: refreshed } = await supabase.from('menu_items').select('*').in('id', cartIds)
-      if (refreshed) setMenuItems(refreshed)
-      return
-    }
-
-    clearCart()
-    setConfirmedOrder(order)
   }
 
   if (confirmedOrder) {

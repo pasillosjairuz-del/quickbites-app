@@ -23,18 +23,22 @@ export default function LoginPage() {
     setMessage('')
     setLoading(true)
 
-    // Authenticate user against Supabase Auth
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
+    try {
+      // Authenticate user against Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      })
 
-    setLoading(false)
-
-    if (error) {
-      setMessage(error.message)
-    } else if (data?.user) {
-      navigate('/menu')
+      if (error) {
+        setMessage(error.message)
+      } else if (data?.user) {
+        navigate('/menu')
+      }
+    } catch {
+      setMessage("Can't reach the server right now. Please try again in a moment.")
+    } finally {
+      setLoading(false)
     }
   }
 

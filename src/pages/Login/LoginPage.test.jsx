@@ -33,17 +33,17 @@ beforeEach(() => {
 test('renders a register link pointing to /register-user', () => {
   renderPage()
 
-  expect(screen.getByRole('link', { name: /register/i })).toHaveAttribute('href', '/register-user')
+  expect(screen.getByRole('link', { name: /register/i })).toHaveAttribute('href', '/register')
 })
 
 test('logs in and navigates to /menu on success', async () => {
-  supabase.auth.signInWithPassword.mockResolvedValue({ error: null })
+  supabase.auth.signInWithPassword.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null })
   const user = userEvent.setup()
   renderPage()
 
   await user.type(screen.getByLabelText(/email/i), 'jane.doe@example.com')
-  await user.type(screen.getByLabelText(/password/i), 'Password123!')
-  await user.click(screen.getByRole('button', { name: /log in/i }))
+  await user.type(screen.getByLabelText(/^password$/i), 'Password123!')
+  await user.click(screen.getByRole('button', { name: /dig in/i }))
 
   expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
     email: 'jane.doe@example.com',
@@ -60,8 +60,8 @@ test('shows the supabase error message on failed login', async () => {
   renderPage()
 
   await user.type(screen.getByLabelText(/email/i), 'jane.doe@example.com')
-  await user.type(screen.getByLabelText(/password/i), 'wrong-password')
-  await user.click(screen.getByRole('button', { name: /log in/i }))
+  await user.type(screen.getByLabelText(/^password$/i), 'wrong-password')
+  await user.click(screen.getByRole('button', { name: /dig in/i }))
 
   expect(await screen.findByText('Invalid login credentials')).toBeInTheDocument()
   expect(mockNavigate).not.toHaveBeenCalled()

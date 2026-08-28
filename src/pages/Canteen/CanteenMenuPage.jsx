@@ -3,11 +3,24 @@ import { Link } from 'react-router-dom'
 import FormField from '../../components/FormField.jsx'
 import Button from '../../components/Button.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
 
 const emptyForm = { name: '', description: '', price: '', servingCount: '' }
 
+function toRow(item) {
+  return {
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    price: item.price,
+    serving_count: item.serving_count,
+    is_available: item.is_available,
+  }
+}
+
 export default function CanteenMenuPage() {
   const [authorized, setAuthorized] = useState(null)
+  const [demoMode, setDemoMode] = useState(false)
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -24,46 +37,63 @@ export default function CanteenMenuPage() {
     setLoading(true)
     setError('')
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setAuthorized(false)
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError) throw userError
+
+      if (!user) {
+        setAuthorized(false)
+        setLoading(false)
+        return
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) throw profileError
+
+      if (!profile || !['canteen', 'admin'].includes(profile.role)) {
+        setAuthorized(false)
+        setLoading(false)
+        return
+      }
+
+      setAuthorized(true)
+      setDemoMode(false)
+      await loadItems()
+    } catch {
+      setAuthorized(true)
+      setDemoMode(true)
+      setItems(placeholderMenuItems.map(toRow))
       setLoading(false)
-      return
     }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError || !profile || !['canteen', 'admin'].includes(profile.role)) {
-      setAuthorized(false)
-      setLoading(false)
-      return
-    }
-
-    setAuthorized(true)
-    await loadItems()
   }
 
   async function loadItems() {
     setLoading(true)
-    const { data, error: fetchError } = await supabase
-      .from('menu_items')
-      .select('*')
-      .order('created_at', { ascending: false })
-    setLoading(false)
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('menu_items')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-    if (fetchError) {
-      setError(fetchError.message)
-      return
+      if (fetchError) throw fetchError
+      setLoading(false)
+      setDemoMode(false)
+      setItems(data)
+    } catch {
+      setLoading(false)
+      setDemoMode(true)
+      setItems(placeholderMenuItems.map(toRow))
     }
-    setItems(data)
   }
 
   async function handleAddSubmit(event) {
     event.preventDefault()
+    if (demoMode) return
     setError('')
     setSubmitting(true)
 
@@ -100,6 +130,7 @@ export default function CanteenMenuPage() {
   }
 
   async function handleEditSave(id) {
+    if (demoMode) return
     setError('')
     const { error: updateError } = await supabase
       .from('menu_items')
@@ -121,6 +152,7 @@ export default function CanteenMenuPage() {
   }
 
   async function handleDelete(id) {
+    if (demoMode) return
     setError('')
     const { error: deleteError } = await supabase.from('menu_items').delete().eq('id', id)
     if (deleteError) {
@@ -161,6 +193,12 @@ export default function CanteenMenuPage() {
         </Link>
       </div>
 
+      {demoMode && (
+        <p className="auth-status">
+          Showing sample menu items — Supabase isn't reachable, so adding, editing, and deleting are disabled.
+        </p>
+      )}
+
       <form className="canteen-form" onSubmit={handleAddSubmit}>
         <FormField
           id="name"
@@ -168,6 +206,7 @@ export default function CanteenMenuPage() {
           value={form.name}
           onChange={(event) => setForm((f) => ({ ...f, name: event.target.value }))}
           placeholder="Pork Adobo"
+          disabled={demoMode}
           required
         />
         <FormField
@@ -176,6 +215,7 @@ export default function CanteenMenuPage() {
           value={form.description}
           onChange={(event) => setForm((f) => ({ ...f, description: event.target.value }))}
           placeholder="Short description"
+          disabled={demoMode}
         />
         <FormField
           id="price"
@@ -184,6 +224,7 @@ export default function CanteenMenuPage() {
           value={form.price}
           onChange={(event) => setForm((f) => ({ ...f, price: event.target.value }))}
           placeholder="70"
+          disabled={demoMode}
           required
         />
         <FormField
@@ -193,10 +234,11 @@ export default function CanteenMenuPage() {
           value={form.servingCount}
           onChange={(event) => setForm((f) => ({ ...f, servingCount: event.target.value }))}
           placeholder="50"
+          disabled={demoMode}
           required
         />
         {error && <p className="auth-error">{error}</p>}
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting || demoMode}>
           {submitting ? 'Adding...' : 'Add Item'}
         </Button>
       </form>
@@ -258,10 +300,10 @@ export default function CanteenMenuPage() {
                   </p>
                 </div>
                 <div className="canteen-item-actions">
-                  <Button variant="outline" onClick={() => startEdit(item)}>
+                  <Button variant="outline" onClick={() => startEdit(item)} disabled={demoMode}>
                     Edit
                   </Button>
-                  <Button variant="outline" onClick={() => handleDelete(item.id)}>
+                  <Button variant="outline" onClick={() => handleDelete(item.id)} disabled={demoMode}>
                     Delete
                   </Button>
                 </div>

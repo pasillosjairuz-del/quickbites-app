@@ -46,7 +46,7 @@ test('renders all registration fields', () => {
   expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument()
   expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument()
   expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: /register/i })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument()
 })
 
 test('shows a validation error and skips signUp when passwords do not match', async () => {
@@ -54,7 +54,7 @@ test('shows a validation error and skips signUp when passwords do not match', as
   renderPage()
 
   await fillForm(user, { password: 'Password123!', confirmPassword: 'Different123!' })
-  await user.click(screen.getByRole('button', { name: /register/i }))
+  await user.click(screen.getByRole('button', { name: /sign up/i }))
 
   expect(await screen.findByText(/passwords do not match/i)).toBeInTheDocument()
   expect(supabase.auth.signUp).not.toHaveBeenCalled()
@@ -66,13 +66,13 @@ test('combines first and last name and calls supabase.auth.signUp, navigating to
   renderPage()
 
   await fillForm(user)
-  await user.click(screen.getByRole('button', { name: /register/i }))
+  await user.click(screen.getByRole('button', { name: /sign up/i }))
 
   await waitFor(() => {
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'jane.doe@example.com',
       password: 'Password123!',
-      options: { data: { full_name: 'Jane Doe' } },
+      options: { data: { full_name: 'Jane Doe', role: 'student' } },
     })
   })
   expect(mockNavigate).toHaveBeenCalledWith('/menu')
@@ -84,7 +84,7 @@ test('shows an email-confirmation status message when signUp succeeds without a 
   renderPage()
 
   await fillForm(user)
-  await user.click(screen.getByRole('button', { name: /register/i }))
+  await user.click(screen.getByRole('button', { name: /sign up/i }))
 
   expect(await screen.findByText(/check your email/i)).toBeInTheDocument()
   expect(mockNavigate).not.toHaveBeenCalled()
@@ -99,7 +99,7 @@ test('shows the supabase error message when signUp fails', async () => {
   renderPage()
 
   await fillForm(user)
-  await user.click(screen.getByRole('button', { name: /register/i }))
+  await user.click(screen.getByRole('button', { name: /sign up/i }))
 
   expect(await screen.findByText('Email already registered')).toBeInTheDocument()
   expect(mockNavigate).not.toHaveBeenCalled()
