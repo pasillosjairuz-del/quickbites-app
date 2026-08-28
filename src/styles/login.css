@@ -534,3 +534,15 @@ form {
     100% { transform: rotate(360deg); }
 }
 }
+
+.register-name-row {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .register-name-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

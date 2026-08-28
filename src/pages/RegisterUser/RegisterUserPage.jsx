@@ -96,7 +96,7 @@ export default function RegisterUserPage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             
             {/* FIRST NAME & LAST NAME */}
-            <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+            <div className="register-name-row" style={{ width: '100%' }}>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <label htmlFor="firstName" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                   First Name
