@@ -33,7 +33,13 @@ export default function LoginPage() {
       if (error) {
         setMessage(error.message)
       } else if (data?.user) {
-        navigate('/menu')
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single()
+
+        navigate(profile?.role === 'canteen' ? '/canteen-orders' : '/menu')
       }
     } catch {
       setMessage("Can't reach the server right now. Please try again in a moment.")

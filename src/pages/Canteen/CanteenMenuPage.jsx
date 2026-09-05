@@ -64,7 +64,8 @@ export default function CanteenMenuPage() {
       setAuthorized(true)
       setDemoMode(false)
       await loadItems()
-    } catch {
+    } catch (e) {
+      console.error('CanteenMenuPage checkAccessAndLoad failed:', e)
       setAuthorized(true)
       setDemoMode(true)
       setItems(placeholderMenuItems.map(toRow))
@@ -84,7 +85,8 @@ export default function CanteenMenuPage() {
       setLoading(false)
       setDemoMode(false)
       setItems(data)
-    } catch {
+    } catch (e) {
+      console.error('CanteenMenuPage loadItems failed:', e)
       setLoading(false)
       setDemoMode(true)
       setItems(placeholderMenuItems.map(toRow))
@@ -97,21 +99,23 @@ export default function CanteenMenuPage() {
     setError('')
     setSubmitting(true)
 
-    const { error: insertError } = await supabase.from('menu_items').insert({
-      name: form.name,
-      description: form.description,
-      price: Number(form.price),
-      serving_count: Number(form.servingCount),
-    })
+    try {
+      const { error: insertError } = await supabase.from('menu_items').insert({
+        name: form.name,
+        description: form.description,
+        price: Number(form.price),
+        serving_count: Number(form.servingCount),
+      })
 
-    setSubmitting(false)
-    if (insertError) {
-      setError(insertError.message)
-      return
+      if (insertError) throw insertError
+
+      setForm(emptyForm)
+      await loadItems()
+    } catch (e) {
+      setError(e.message ?? "Can't reach Supabase right now. Please try again.")
+    } finally {
+      setSubmitting(false)
     }
-
-    setForm(emptyForm)
-    await loadItems()
   }
 
   function startEdit(item) {
@@ -132,34 +136,36 @@ export default function CanteenMenuPage() {
   async function handleEditSave(id) {
     if (demoMode) return
     setError('')
-    const { error: updateError } = await supabase
-      .from('menu_items')
-      .update({
-        name: editForm.name,
-        description: editForm.description,
-        price: Number(editForm.price),
-        serving_count: Number(editForm.servingCount),
-      })
-      .eq('id', id)
+    try {
+      const { error: updateError } = await supabase
+        .from('menu_items')
+        .update({
+          name: editForm.name,
+          description: editForm.description,
+          price: Number(editForm.price),
+          serving_count: Number(editForm.servingCount),
+        })
+        .eq('id', id)
 
-    if (updateError) {
-      setError(updateError.message)
-      return
+      if (updateError) throw updateError
+
+      cancelEdit()
+      await loadItems()
+    } catch (e) {
+      setError(e.message ?? "Can't reach Supabase right now. Please try again.")
     }
-
-    cancelEdit()
-    await loadItems()
   }
 
   async function handleDelete(id) {
     if (demoMode) return
     setError('')
-    const { error: deleteError } = await supabase.from('menu_items').delete().eq('id', id)
-    if (deleteError) {
-      setError(deleteError.message)
-      return
+    try {
+      const { error: deleteError } = await supabase.from('menu_items').delete().eq('id', id)
+      if (deleteError) throw deleteError
+      await loadItems()
+    } catch (e) {
+      setError(e.message ?? "Can't reach Supabase right now. Please try again.")
     }
-    await loadItems()
   }
 
   if (authorized === null) {
