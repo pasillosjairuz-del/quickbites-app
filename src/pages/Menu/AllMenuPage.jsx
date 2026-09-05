@@ -21,22 +21,28 @@ function toCardItem(row) {
 
 export default function AllMenuPage() {
   const { totalCount } = useCart()
+
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [usingPlaceholder, setUsingPlaceholder] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
+
+  // Stores favorite IDs in the order they were favorited
+  const [favoriteOrder, setFavoriteOrder] = useState([])
 
   useEffect(() => {
     let isMounted = true
 
     async function loadMenuItems() {
       setLoading(true)
+
       const { data, error: fetchError } = await supabase
         .from('menu_items')
         .select('*')
         .order('created_at', { ascending: true })
 
       if (!isMounted) return
+
       setLoading(false)
 
       if (fetchError) {
@@ -50,21 +56,73 @@ export default function AllMenuPage() {
     }
 
     loadMenuItems()
+
     return () => {
       isMounted = false
     }
   }, [])
 
-  const pageCount = Math.max(1, Math.ceil(menuItems.length / ITEMS_PER_PAGE))
+  const toggleFavorite = (itemId) => {
+    setFavoriteOrder((currentFavorites) => {
+      const isAlreadyFavorite = currentFavorites.includes(itemId)
+
+      if (isAlreadyFavorite) {
+        // Remove from favorites
+        return currentFavorites.filter((id) => id !== itemId)
+      }
+
+      // Add to favorites
+      return [...currentFavorites, itemId]
+    })
+
+    // Always return the user to the first page
+    // so a newly favorited item is immediately visible.
+    setCurrentPage(0)
+  }
+
+  const sortedItems = useMemo(() => {
+    return [...menuItems].sort((a, b) => {
+      const aIndex = favoriteOrder.indexOf(a.id)
+      const bIndex = favoriteOrder.indexOf(b.id)
+
+      const aFavorited = aIndex !== -1
+      const bFavorited = bIndex !== -1
+
+      // Both are not favorited: keep original menu order
+      if (!aFavorited && !bFavorited) {
+        return 0
+      }
+
+      // Favorited items go above non-favorited items
+      if (aFavorited && !bFavorited) {
+        return -1
+      }
+
+      if (!aFavorited && bFavorited) {
+        return 1
+      }
+
+      // If both are favorited, newest favorite goes first
+      return bIndex - aIndex
+    })
+  }, [menuItems, favoriteOrder])
+
+  const pageCount = Math.max(
+    1,
+    Math.ceil(sortedItems.length / ITEMS_PER_PAGE)
+  )
+
   const pageItems = useMemo(() => {
     const start = currentPage * ITEMS_PER_PAGE
-    return menuItems.slice(start, start + ITEMS_PER_PAGE)
-  }, [menuItems, currentPage])
+
+    return sortedItems.slice(start, start + ITEMS_PER_PAGE)
+  }, [sortedItems, currentPage])
 
   return (
     <div className="menu-page">
       <div className="menu-page-header">
         <h1 className="menu-page-title">All Menu</h1>
+
         {totalCount > 0 && (
           <Link to="/checkout" className="cart-summary-link">
             🛒 {totalCount} item{totalCount > 1 ? 's' : ''} — Checkout
@@ -74,7 +132,8 @@ export default function AllMenuPage() {
 
       {usingPlaceholder && (
         <p className="auth-status">
-          Showing sample menu items — Supabase isn't reachable, so this is placeholder data.
+          Showing sample menu items — Supabase isn't reachable, so this is
+          placeholder data.
         </p>
       )}
 
@@ -84,14 +143,26 @@ export default function AllMenuPage() {
         <>
           <div className="menu-grid">
             {pageItems.map((item) => (
-              <MenuCard key={item.id} item={item} />
+              <MenuCard
+                key={item.id}
+                item={item}
+                isFavorited={favoriteOrder.includes(item.id)}
+                onToggleFavorite={() => toggleFavorite(item.id)}
+              />
             ))}
           </div>
+
           <Pagination
             pageCount={pageCount}
             currentPage={currentPage}
-            onPrev={() => setCurrentPage((page) => Math.max(0, page - 1))}
-            onNext={() => setCurrentPage((page) => Math.min(pageCount - 1, page + 1))}
+            onPrev={() =>
+              setCurrentPage((page) => Math.max(0, page - 1))
+            }
+            onNext={() =>
+              setCurrentPage((page) =>
+                Math.min(pageCount - 1, page + 1)
+              )
+            }
           />
         </>
       )}
