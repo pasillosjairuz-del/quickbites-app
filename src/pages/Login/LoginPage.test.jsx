@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import LoginPage from './LoginPage.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import { makeThenable } from '../../test/supabaseMock.js'
 
 const mockNavigate = jest.fn()
 jest.mock('react-router-dom', () => ({
@@ -15,6 +16,7 @@ jest.mock('../../lib/supabaseClient.js', () => ({
     auth: {
       signInWithPassword: jest.fn(),
     },
+    from: jest.fn(),
   },
 }))
 
@@ -36,8 +38,9 @@ test('renders a register link pointing to /register-user', () => {
   expect(screen.getByRole('link', { name: /register/i })).toHaveAttribute('href', '/register')
 })
 
-test('logs in and navigates to /menu on success', async () => {
+test('logs in and navigates to /menu for a student', async () => {
   supabase.auth.signInWithPassword.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null })
+  supabase.from.mockReturnValue(makeThenable({ data: { role: 'student' }, error: null }))
   const user = userEvent.setup()
   renderPage()
 
@@ -50,6 +53,19 @@ test('logs in and navigates to /menu on success', async () => {
     password: 'Password123!',
   })
   expect(mockNavigate).toHaveBeenCalledWith('/menu')
+})
+
+test('logs in and navigates to /canteen-orders for a canteen user', async () => {
+  supabase.auth.signInWithPassword.mockResolvedValue({ data: { user: { id: 'user-2' } }, error: null })
+  supabase.from.mockReturnValue(makeThenable({ data: { role: 'canteen' }, error: null }))
+  const user = userEvent.setup()
+  renderPage()
+
+  await user.type(screen.getByLabelText(/email/i), 'canteen@example.com')
+  await user.type(screen.getByLabelText(/^password$/i), 'Password123!')
+  await user.click(screen.getByRole('button', { name: /dig in/i }))
+
+  expect(mockNavigate).toHaveBeenCalledWith('/canteen-orders')
 })
 
 test('shows the supabase error message on failed login', async () => {
