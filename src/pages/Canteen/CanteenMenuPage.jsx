@@ -64,7 +64,8 @@ export default function CanteenMenuPage() {
       setAuthorized(true)
       setDemoMode(false)
       await loadItems()
-    } catch {
+    } catch (e) {
+      console.error('CanteenMenuPage checkAccessAndLoad failed:', e)
       setAuthorized(true)
       setDemoMode(true)
       setItems(placeholderMenuItems.map(toRow))
@@ -84,7 +85,8 @@ export default function CanteenMenuPage() {
       setLoading(false)
       setDemoMode(false)
       setItems(data)
-    } catch {
+    } catch (e) {
+      console.error('CanteenMenuPage loadItems failed:', e)
       setLoading(false)
       setDemoMode(true)
       setItems(placeholderMenuItems.map(toRow))
