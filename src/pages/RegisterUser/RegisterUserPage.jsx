@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabaseClient';
 
 // Styles & Assets
 import '../../styles/login.css';
 import greenBg from '../../assets/images/green-background.png';
 import jrccLogo from '../../assets/images/jrcc-logo.png';
 import quickbitesLogo from '../../assets/images/quickbites-logo.png';
+
+const ROLE_VALUES = {
+  Student: 'student',
+  'Canteen Staff': 'canteen',
+};
 
 export default function RegisterUserPage() {
   const navigate = useNavigate();
@@ -24,7 +30,7 @@ export default function RegisterUserPage() {
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage('Passwords do not match.');
@@ -32,10 +38,31 @@ export default function RegisterUserPage() {
     }
     setMessage('');
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: `${firstName} ${lastName}`.trim(),
+            role: ROLE_VALUES[role] ?? 'student',
+          },
+        },
+      });
+
+      if (error) {
+        setMessage(error.message);
+      } else if (data?.session) {
+        navigate('/menu');
+      } else {
+        setMessage('Check your email to confirm your account before logging in.');
+      }
+    } catch {
+      setMessage("Can't reach the server right now. Please try again in a moment.");
+    } finally {
       setLoading(false);
-      navigate('/login');
-    }, 500);
+    }
   };
 
   return (
@@ -69,12 +96,14 @@ export default function RegisterUserPage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             
             {/* FIRST NAME & LAST NAME */}
-            <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
+            <div className="register-name-row" style={{ width: '100%' }}>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+                <label htmlFor="firstName" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                   First Name
                 </label>
                 <input
+                  id="firstName"
+                  name="firstName"
                   type="text"
                   placeholder="John Michael"
                   value={firstName}
@@ -93,10 +122,12 @@ export default function RegisterUserPage() {
               </div>
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+                <label htmlFor="lastName" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                   Last Name
                 </label>
                 <input
+                  id="lastName"
+                  name="lastName"
                   type="text"
                   placeholder="Lee"
                   value={lastName}
@@ -117,10 +148,12 @@ export default function RegisterUserPage() {
 
             {/* EMAIL */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+              <label htmlFor="email" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                 Email
               </label>
               <input
+                id="email"
+                name="email"
                 type="email"
                 placeholder="johnmichael@lamona.com"
                 value={email}
@@ -140,13 +173,15 @@ export default function RegisterUserPage() {
 
             {/* PASSWORD */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '2px', color: '#000' }}>
+              <label htmlFor="password" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '2px', color: '#000' }}>
                 Password
               </label>
               <span style={{ fontSize: '11px', color: '#555', marginBottom: '6px' }}>
                 Must be at least 8 characters long with a mix of letters and numbers.
               </span>
               <input
+                id="password"
+                name="password"
                 type="password"
                 placeholder="••••••••••••••••••••"
                 value={password}
@@ -166,10 +201,12 @@ export default function RegisterUserPage() {
 
             {/* CONFIRM PASSWORD */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+              <label htmlFor="confirmPassword" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                 Confirm Password
               </label>
               <input
+                id="confirmPassword"
+                name="confirmPassword"
                 type="password"
                 placeholder="••••••••••••••••••••"
                 value={confirmPassword}
@@ -189,10 +226,12 @@ export default function RegisterUserPage() {
 
             {/* ROLE / I AM REGISTERING AS DROPDOWN */}
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
+              <label htmlFor="role" style={{ fontSize: '13px', fontWeight: 'normal', marginBottom: '4px', color: '#000' }}>
                 I am registering as
               </label>
               <select
+                id="role"
+                name="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 required

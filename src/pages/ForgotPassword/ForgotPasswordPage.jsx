@@ -22,16 +22,20 @@ export default function ForgotPasswordPage() {
     setError('')
     setLoading(true)
 
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
-    })
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/login`,
+      })
 
-    setLoading(false)
-
-    if (resetError) {
-      setError(resetError.message)
-    } else {
-      setMessage('Password reset link sent! Check your email.')
+      if (resetError) {
+        setError(resetError.message)
+      } else {
+        setMessage('Password reset link sent! Check your email.')
+      }
+    } catch {
+      setError("Can't reach the server right now. Please try again in a moment.")
+    } finally {
+      setLoading(false)
     }
   }
 

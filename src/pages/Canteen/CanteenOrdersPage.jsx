@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabaseClient.js'
 
 export default function CanteenOrdersPage() {
   const [authorized, setAuthorized] = useState(null)
+  const [connectionError, setConnectionError] = useState(false)
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -18,47 +19,61 @@ export default function CanteenOrdersPage() {
     setLoading(true)
     setError('')
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setAuthorized(false)
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError) throw userError
+
+      if (!user) {
+        setAuthorized(false)
+        setLoading(false)
+        return
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) throw profileError
+
+      if (!profile || !['canteen', 'admin'].includes(profile.role)) {
+        setAuthorized(false)
+        setLoading(false)
+        return
+      }
+
+      setAuthorized(true)
+      await loadOrders()
+    } catch {
+      setConnectionError(true)
+      setAuthorized(true)
       setLoading(false)
-      return
     }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError || !profile || !['canteen', 'admin'].includes(profile.role)) {
-      setAuthorized(false)
-      setLoading(false)
-      return
-    }
-
-    setAuthorized(true)
-    await loadOrders()
   }
 
   async function loadOrders() {
     setLoading(true)
-    const { data, error: fetchError } = await supabase
-      .from('orders')
-      .select('*, order_items(quantity, unit_price, menu_items(name))')
-      .neq('status', 'completed')
-      .neq('status', 'cancelled')
-      .order('created_at', { ascending: true })
-    setLoading(false)
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('orders')
+        .select('*, order_items(quantity, unit_price, menu_items(name))')
+        .neq('status', 'completed')
+        .neq('status', 'cancelled')
+        .order('created_at', { ascending: true })
 
-    if (fetchError) {
-      setError(fetchError.message)
-      return
+      if (fetchError) throw fetchError
+      setLoading(false)
+      setConnectionError(false)
+      setOrders(data)
+    } catch {
+      setLoading(false)
+      setConnectionError(true)
     }
-    setOrders(data)
   }
 
   async function handleMarkPickedUp(orderId) {
+    if (connectionError) return
     setError('')
     setCompletingId(orderId)
     const { error: updateError } = await supabase
@@ -107,9 +122,15 @@ export default function CanteenOrdersPage() {
 
       {error && <p className="auth-error">{error}</p>}
 
+      {connectionError && (
+        <p className="auth-error">
+          Can't reach Supabase right now, so live orders can't be shown. Try again once the connection is back.
+        </p>
+      )}
+
       {loading ? (
         <p className="auth-status">Loading orders...</p>
-      ) : orders.length === 0 ? (
+      ) : connectionError ? null : orders.length === 0 ? (
         <p className="auth-status">No orders waiting for pickup.</p>
       ) : (
         <div className="canteen-list">
