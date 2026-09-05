@@ -5,6 +5,7 @@ import Pagination from '../../components/Pagination.jsx'
 import { useCart } from '../../context/CartContext.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
 import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
+import FilterModal from '../../components/FilterModal.jsx'
 
 const ITEMS_PER_PAGE = 9
 
@@ -25,6 +26,9 @@ export default function AllMenuPage() {
   const [loading, setLoading] = useState(true)
   const [usingPlaceholder, setUsingPlaceholder] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
+
+  
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -65,6 +69,15 @@ export default function AllMenuPage() {
     <div className="menu-page">
       <div className="menu-page-header">
         <h1 className="menu-page-title">All Menu</h1>
+        
+        {}
+        <button
+          onClick={() => setIsFilterOpen(true)}
+          className="bg-[#1C6400] text-white px-4 py-2 rounded-md font-bold hover:bg-emerald-800 transition"
+        >
+          Filter 🔍
+        </button>
+
         {totalCount > 0 && (
           <Link to="/checkout" className="cart-summary-link">
             🛒 {totalCount} item{totalCount > 1 ? 's' : ''} — Checkout
@@ -95,6 +108,12 @@ export default function AllMenuPage() {
           />
         </>
       )}
+
+      {}
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+      />
     </div>
   )
 }
