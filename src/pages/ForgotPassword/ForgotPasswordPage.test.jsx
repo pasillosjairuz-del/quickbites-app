@@ -42,7 +42,7 @@ test('shows a confirmation message on success', async () => {
   expect(await screen.findByText(/password reset link sent/i)).toBeInTheDocument()
   expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledWith(
     'jane.doe@example.com',
-    expect.objectContaining({ redirectTo: expect.stringContaining('/login') }),
+    expect.objectContaining({ redirectTo: expect.stringContaining('/reset-password') }),
   )
 })
 
