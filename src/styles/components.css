@@ -703,6 +703,12 @@
   padding: 32px 40px 56px;
   max-width: 720px;
   margin: 0 auto;
+  text-align: left;
+}
+
+.orders-page .menu-page-title {
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .orders-section {
@@ -714,6 +720,7 @@
   font-size: 1.15rem;
   color: var(--qb-green-dark);
   margin: 0 0 12px;
+  text-align: left;
 }
 
 .orders-list {
