@@ -107,3 +107,6 @@ Same completed-orders / Asia/Manila / inclusive-range rules as above. `p_limit` 
 ## Helpers (rarely needed from the client)
 
 - `is_admin()` and `is_canteen_or_admin()` return a boolean for the current user. They are handy for route guards: `supabase.rpc('is_admin')`.
+
+## Signup role clamp
+`handle_new_user()` (migration 20261008000004) only honours `student` and `canteen` from signup metadata; any other value (including `admin`) becomes `student`. Promote admins with `admin_set_user_role`.
