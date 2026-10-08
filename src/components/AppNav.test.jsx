@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import AppNav, { NAV_LINKS } from './AppNav.jsx'
@@ -53,6 +53,17 @@ test('admin sees every link and the cart', () => {
   expect(screen.getByRole('link', { name: 'Orders' })).toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'Manage Menu' })).toBeInTheDocument()
   expect(screen.getByRole('link', { name: /cart/i })).toBeInTheDocument()
+})
+
+test('student and admin see My Orders; canteen does not', () => {
+  renderNav('student')
+  expect(screen.getByRole('link', { name: 'My Orders' })).toHaveAttribute('href', '/orders')
+  cleanup()
+  renderNav('admin')
+  expect(screen.getByRole('link', { name: 'My Orders' })).toHaveAttribute('href', '/orders')
+  cleanup()
+  renderNav('canteen')
+  expect(screen.queryByRole('link', { name: 'My Orders' })).not.toBeInTheDocument()
 })
 
 test('renders every configured link for each role', () => {
