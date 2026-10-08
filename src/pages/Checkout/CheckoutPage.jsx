@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../context/CartContext.jsx'
 import Button from '../../components/Button.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import LoadError from '../../components/LoadError.jsx'
 import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
+import { allowPlaceholderData } from '../../lib/env.js'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
@@ -11,11 +13,14 @@ export default function CheckoutPage() {
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [usingPlaceholder, setUsingPlaceholder] = useState(false)
+  const [loadError, setLoadError] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
   const [error, setError] = useState('')
   const [placingOrder, setPlacingOrder] = useState(false)
   const [confirmedOrder, setConfirmedOrder] = useState(null)
 
   const cartIds = Object.keys(items)
+  const retry = useCallback(() => setReloadKey((key) => key + 1), [])
 
   useEffect(() => {
     if (cartIds.length === 0) {
@@ -28,6 +33,7 @@ export default function CheckoutPage() {
     async function loadCartItems() {
       setLoading(true)
       setError('')
+      setLoadError(false)
       const { data, error: fetchError } = await supabase
         .from('menu_items')
         .select('*')
@@ -37,8 +43,15 @@ export default function CheckoutPage() {
       setLoading(false)
 
       if (fetchError) {
-        setUsingPlaceholder(true)
-        setMenuItems(placeholderMenuItems.filter((item) => cartIds.includes(item.id)))
+        if (allowPlaceholderData) {
+          setUsingPlaceholder(true)
+          setMenuItems(placeholderMenuItems.filter((item) => cartIds.includes(item.id)))
+        } else {
+          // Production: never price or order from fake data.
+          setUsingPlaceholder(false)
+          setMenuItems([])
+          setLoadError(true)
+        }
         return
       }
       setUsingPlaceholder(false)
@@ -50,7 +63,7 @@ export default function CheckoutPage() {
       isMounted = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartIds.join(',')])
+  }, [cartIds.join(','), reloadKey])
 
   const cartRows = menuItems.map((item) => ({
     ...item,
@@ -60,6 +73,7 @@ export default function CheckoutPage() {
   const total = cartRows.reduce((sum, row) => sum + row.subtotal, 0)
 
   async function handlePlaceOrder() {
+    if (loadError || (usingPlaceholder && !allowPlaceholderData)) return
     setError('')
     setPlacingOrder(true)
 
@@ -105,7 +119,7 @@ export default function CheckoutPage() {
     )
   }
 
-  if (!loading && cartRows.length === 0) {
+  if (!loading && !loadError && cartRows.length === 0) {
     return (
       <div className="checkout-page">
         <h1 className="menu-page-title">Checkout</h1>
@@ -129,6 +143,13 @@ export default function CheckoutPage() {
 
       {loading ? (
         <p className="auth-status">Loading cart...</p>
+      ) : loadError ? (
+        <>
+          <LoadError onRetry={retry} />
+          <Button type="button" disabled>
+            Place Order
+          </Button>
+        </>
       ) : (
         <>
           <div className="checkout-list">
