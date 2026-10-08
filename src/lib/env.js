@@ -2,7 +2,10 @@
 // import.meta, so tests resolve this module to src/test/envMock.js instead
 // (see moduleNameMapper in jest.config.cjs).
 export const isDev = Boolean(import.meta.env.DEV)
-export const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true'
+// Demo mode bypasses auth guards and shows a fake admin, so it must never take
+// effect in a production build, even if the variable leaks into one (e.g. a
+// Vercel "all environments" variable). Use `npm run dev` or `vite build --mode development`.
+export const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true' && !import.meta.env.PROD
 // Sample menu data is only acceptable for local/demo use, never in production.
 export const allowPlaceholderData = isDev || isDemoMode
 

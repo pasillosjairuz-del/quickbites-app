@@ -15,7 +15,12 @@ on:
 
 jobs:
   review:
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+    # Skip forks and Dependabot: they get no repo secrets, so the job would just fail.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read

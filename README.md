@@ -22,14 +22,14 @@ Set in `.env` locally (git-ignored), in the Vercel project settings for the web 
 | --- | --- | --- |
 | `VITE_SUPABASE_URL` | yes | Supabase project URL (Project Settings -> API). |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | yes | Supabase publishable (anon) key. Never use the service-role key in the app. |
-| `VITE_DEMO_MODE` | no | `true` allows sample menu data when Supabase is unreachable, even in a production build. Keep `false` (or unset) in production. |
+| `VITE_DEMO_MODE` | no | `true` allows sample menu data when Supabase is unreachable and bypasses the auth/role guards (fake admin user). **Ignored in production builds** (`import.meta.env.PROD`); only works with `npm run dev` or `vite build --mode development`. Keep `false` (or unset) everywhere else. |
 | `VITE_APP_URL` | recommended | Public URL of the deployed web app, no trailing slash (e.g. `https://your-app.vercel.app`). Used for the password-reset link. Inside the Android app `window.location.origin` is `localhost`, so without this the emailed link would point at localhost. |
 
 If the Supabase variables are missing the app still boots against a placeholder URL, but every request fails.
 
 ### Sample data policy
 
-Sample menu items (`src/data/placeholderMenuItems.js`) are shown only when `import.meta.env.DEV` is true (`npm run dev`) or `VITE_DEMO_MODE=true`. In a normal production build, if the menu cannot be loaded the Menu, Checkout and Canteen pages show "Couldn't load the menu. Check your connection." with a Retry button. Place Order stays disabled and the canteen form cannot save until the real data loads. All of these flags are read in one place, `src/lib/env.js` (nothing else may touch `import.meta.env`).
+Sample menu items (`src/data/placeholderMenuItems.js`) are shown only when `import.meta.env.DEV` is true (`npm run dev`) or `VITE_DEMO_MODE=true` in a non-production build. In a normal production build, if the menu cannot be loaded the Menu, Checkout and Canteen pages show "Couldn't load the menu. Check your connection." with a Retry button. Place Order stays disabled and the canteen form cannot save until the real data loads. All of these flags are read in one place, `src/lib/env.js` (nothing else may touch `import.meta.env`).
 
 ## Scripts
 
