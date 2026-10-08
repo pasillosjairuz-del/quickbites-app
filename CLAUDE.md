@@ -18,7 +18,7 @@ Campus food ordering and pickup app for JRCC. Students browse the menu, order, a
 - `profiles.role` is plain text with a CHECK constraint. Do NOT `ALTER COLUMN ... TYPE` it (other tables' policies depend on it).
 - Never write an RLS policy that queries `profiles` inline from a `profiles` policy (infinite recursion, 42P17). Use the `SECURITY DEFINER` helper `public.is_admin_or_staff()`.
 - Stock is decremented atomically at order time inside `place_order()`; pickup only changes `orders.status`.
-- The app falls back to `src/data/placeholderMenuItems.js` when Supabase is unreachable. Keep that working.
+- The app falls back to `src/data/placeholderMenuItems.js` when Supabase is unreachable, but only when `allowPlaceholderData` (dev server or `VITE_DEMO_MODE=true`, from `src/lib/env.js`) is true. In production it shows an error + Retry instead. Never read `import.meta.env` outside `src/lib/env.js`.
 
 ## Git workflow
 - Branch off `develop` (`feature/...`, `fix/...`, `chore/...`), open PRs into `develop`. `main` is production and only receives `develop` via PR.
