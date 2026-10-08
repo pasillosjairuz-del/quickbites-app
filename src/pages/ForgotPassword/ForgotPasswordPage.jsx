@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
+import { appUrl } from '../../lib/env'
 
 // Styles
 import '../../styles/login.css'
@@ -24,7 +25,7 @@ export default function ForgotPasswordPage() {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${appUrl || window.location.origin}/reset-password`,
       })
 
       if (resetError) {

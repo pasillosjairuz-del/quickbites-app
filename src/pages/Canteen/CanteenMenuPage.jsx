@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import FormField from '../../components/FormField.jsx'
 import Button from '../../components/Button.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import LoadError from '../../components/LoadError.jsx'
 import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
+import { allowPlaceholderData } from '../../lib/env.js'
 
 const emptyForm = { name: '', description: '', price: '', servingCount: '' }
 
@@ -21,6 +23,7 @@ function toRow(item) {
 export default function CanteenMenuPage() {
   const [authorized, setAuthorized] = useState(null)
   const [demoMode, setDemoMode] = useState(false)
+  const [loadError, setLoadError] = useState(false)
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -33,9 +36,25 @@ export default function CanteenMenuPage() {
     checkAccessAndLoad()
   }, [])
 
+  // Shared failure handling: sample rows only where placeholder data is allowed
+  // (dev/demo); in production show an error + Retry and never fake rows.
+  function handleLoadFailure() {
+    setLoading(false)
+    if (allowPlaceholderData) {
+      setDemoMode(true)
+      setLoadError(false)
+      setItems(placeholderMenuItems.map(toRow))
+    } else {
+      setDemoMode(false)
+      setLoadError(true)
+      setItems([])
+    }
+  }
+
   async function checkAccessAndLoad() {
     setLoading(true)
     setError('')
+    setLoadError(false)
 
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
@@ -66,15 +85,14 @@ export default function CanteenMenuPage() {
       await loadItems()
     } catch (e) {
       console.error('CanteenMenuPage checkAccessAndLoad failed:', e)
-      setAuthorized(true)
-      setDemoMode(true)
-      setItems(placeholderMenuItems.map(toRow))
-      setLoading(false)
+      if (allowPlaceholderData) setAuthorized(true)
+      handleLoadFailure()
     }
   }
 
   async function loadItems() {
     setLoading(true)
+    setLoadError(false)
     try {
       const { data, error: fetchError } = await supabase
         .from('menu_items')
@@ -87,15 +105,13 @@ export default function CanteenMenuPage() {
       setItems(data)
     } catch (e) {
       console.error('CanteenMenuPage loadItems failed:', e)
-      setLoading(false)
-      setDemoMode(true)
-      setItems(placeholderMenuItems.map(toRow))
+      handleLoadFailure()
     }
   }
 
   async function handleAddSubmit(event) {
     event.preventDefault()
-    if (demoMode) return
+    if (demoMode || loadError) return
     setError('')
     setSubmitting(true)
 
@@ -134,7 +150,7 @@ export default function CanteenMenuPage() {
   }
 
   async function handleEditSave(id) {
-    if (demoMode) return
+    if (demoMode || loadError) return
     setError('')
     try {
       const { error: updateError } = await supabase
@@ -157,7 +173,7 @@ export default function CanteenMenuPage() {
   }
 
   async function handleDelete(id) {
-    if (demoMode) return
+    if (demoMode || loadError) return
     setError('')
     try {
       const { error: deleteError } = await supabase.from('menu_items').delete().eq('id', id)
@@ -166,6 +182,14 @@ export default function CanteenMenuPage() {
     } catch (e) {
       setError(e.message ?? "Can't reach Supabase right now. Please try again.")
     }
+  }
+
+  if (loadError && authorized !== true) {
+    return (
+      <div className="canteen-page">
+        <LoadError onRetry={checkAccessAndLoad} />
+      </div>
+    )
   }
 
   if (authorized === null) {
@@ -190,6 +214,8 @@ export default function CanteenMenuPage() {
     )
   }
 
+  const formDisabled = demoMode || loadError
+
   return (
     <div className="canteen-page">
       <div className="canteen-page-header">
@@ -212,7 +238,7 @@ export default function CanteenMenuPage() {
           value={form.name}
           onChange={(event) => setForm((f) => ({ ...f, name: event.target.value }))}
           placeholder="Pork Adobo"
-          disabled={demoMode}
+          disabled={formDisabled}
           required
         />
         <FormField
@@ -221,7 +247,7 @@ export default function CanteenMenuPage() {
           value={form.description}
           onChange={(event) => setForm((f) => ({ ...f, description: event.target.value }))}
           placeholder="Short description"
-          disabled={demoMode}
+          disabled={formDisabled}
         />
         <FormField
           id="price"
@@ -230,7 +256,7 @@ export default function CanteenMenuPage() {
           value={form.price}
           onChange={(event) => setForm((f) => ({ ...f, price: event.target.value }))}
           placeholder="70"
-          disabled={demoMode}
+          disabled={formDisabled}
           required
         />
         <FormField
@@ -240,11 +266,11 @@ export default function CanteenMenuPage() {
           value={form.servingCount}
           onChange={(event) => setForm((f) => ({ ...f, servingCount: event.target.value }))}
           placeholder="50"
-          disabled={demoMode}
+          disabled={formDisabled}
           required
         />
         {error && <p className="auth-error">{error}</p>}
-        <Button type="submit" disabled={submitting || demoMode}>
+        <Button type="submit" disabled={submitting || formDisabled}>
           {submitting ? 'Adding...' : 'Add Item'}
         </Button>
       </form>
@@ -252,6 +278,8 @@ export default function CanteenMenuPage() {
       <div className="canteen-list">
         {loading ? (
           <p className="auth-status">Loading items...</p>
+        ) : loadError ? (
+          <LoadError onRetry={loadItems} />
         ) : items.length === 0 ? (
           <p className="auth-status">No menu items yet.</p>
         ) : (
@@ -306,10 +334,10 @@ export default function CanteenMenuPage() {
                   </p>
                 </div>
                 <div className="canteen-item-actions">
-                  <Button variant="outline" onClick={() => startEdit(item)} disabled={demoMode}>
+                  <Button variant="outline" onClick={() => startEdit(item)} disabled={formDisabled}>
                     Edit
                   </Button>
-                  <Button variant="outline" onClick={() => handleDelete(item.id)} disabled={demoMode}>
+                  <Button variant="outline" onClick={() => handleDelete(item.id)} disabled={formDisabled}>
                     Delete
                   </Button>
                 </div>

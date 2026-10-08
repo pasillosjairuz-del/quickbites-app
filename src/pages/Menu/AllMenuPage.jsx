@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import MenuCard from '../../components/MenuCard.jsx'
 import Pagination from '../../components/Pagination.jsx'
 import { useCart } from '../../context/CartContext.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
+import LoadError from '../../components/LoadError.jsx'
 import { placeholderMenuItems } from '../../data/placeholderMenuItems.js'
+import { allowPlaceholderData } from '../../lib/env.js'
 
 const ITEMS_PER_PAGE = 9
 
@@ -24,13 +26,18 @@ export default function AllMenuPage() {
   const [menuItems, setMenuItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [usingPlaceholder, setUsingPlaceholder] = useState(false)
+  const [loadError, setLoadError] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  const retry = useCallback(() => setReloadKey((key) => key + 1), [])
 
   useEffect(() => {
     let isMounted = true
 
     async function loadMenuItems() {
       setLoading(true)
+      setLoadError(false)
       const { data, error: fetchError } = await supabase
         .from('menu_items')
         .select('*')
@@ -40,8 +47,14 @@ export default function AllMenuPage() {
       setLoading(false)
 
       if (fetchError) {
-        setUsingPlaceholder(true)
-        setMenuItems(placeholderMenuItems.map(toCardItem))
+        if (allowPlaceholderData) {
+          setUsingPlaceholder(true)
+          setMenuItems(placeholderMenuItems.map(toCardItem))
+        } else {
+          setUsingPlaceholder(false)
+          setMenuItems([])
+          setLoadError(true)
+        }
         return
       }
 
@@ -53,7 +66,7 @@ export default function AllMenuPage() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [reloadKey])
 
   const pageCount = Math.max(1, Math.ceil(menuItems.length / ITEMS_PER_PAGE))
   const pageItems = useMemo(() => {
@@ -80,6 +93,8 @@ export default function AllMenuPage() {
 
       {loading ? (
         <p className="auth-status">Loading menu...</p>
+      ) : loadError ? (
+        <LoadError onRetry={retry} />
       ) : (
         <>
           <div className="menu-grid">
