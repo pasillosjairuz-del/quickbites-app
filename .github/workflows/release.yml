@@ -32,6 +32,11 @@ jobs:
 
       - run: npm ci
 
+      # package-lock.json was generated on Windows and lacks the Linux rollup
+      # binary (npm optional-dependency bug), so install the matching one.
+      - name: Install Linux rollup binary
+        run: npm install --no-save --no-package-lock @rollup/rollup-linux-x64-gnu@$(node -p "require('rollup/package.json').version")
+
       - name: Test
         run: npm test -- --ci
 

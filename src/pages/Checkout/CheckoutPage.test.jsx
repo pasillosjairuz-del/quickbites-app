@@ -91,3 +91,13 @@ test('shows an error when placing an order while logged out', async () => {
 
   expect(await screen.findByText(/need to log in/i)).toBeInTheDocument()
 })
+
+test('falls back to placeholder cart rows with a banner when supabase is unreachable (dev/demo)', async () => {
+  supabase.from.mockReturnValue(makeThenable({ data: null, error: { message: 'fetch failed' } }))
+
+  renderPage()
+
+  expect(await screen.findByText(/showing sample menu items/i)).toBeInTheDocument()
+  expect(screen.getByText('Pork Adobo')).toBeInTheDocument()
+  expect(screen.getByText(/Total: ₱140/)).toBeInTheDocument()
+})

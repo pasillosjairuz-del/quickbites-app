@@ -4,3 +4,6 @@
 export const isDev = true
 export const isDemoMode = false
 export const allowPlaceholderData = true
+export const supabaseUrl = 'https://placeholder.supabase.co'
+export const supabaseKey = 'placeholder-key'
+export const appUrl = ''
