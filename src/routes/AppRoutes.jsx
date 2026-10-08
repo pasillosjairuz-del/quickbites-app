@@ -8,6 +8,7 @@ import CanteenMenuPage from '../pages/Canteen/CanteenMenuPage.jsx'
 import CanteenOrdersPage from '../pages/Canteen/CanteenOrdersPage.jsx'
 import CheckoutPage from '../pages/Checkout/CheckoutPage.jsx'
 import AdminDashboardPage from '../pages/Admin/AdminDashboardPage.jsx'
+import OrdersPage from '../pages/Orders/OrdersPage.jsx'
 import RequireAuth from '../components/RequireAuth.jsx'
 import AppLayout from '../components/AppLayout.jsx'
 
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         <Route element={<AppLayout />}>
           <Route path="/menu" element={<AllMenuPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
         </Route>
       </Route>
 
