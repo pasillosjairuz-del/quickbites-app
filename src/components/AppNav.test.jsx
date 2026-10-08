@@ -55,6 +55,16 @@ test('admin sees every link and the cart', () => {
   expect(screen.getByRole('link', { name: /cart/i })).toBeInTheDocument()
 })
 
+test('only admins get the Admin link', () => {
+  renderNav('admin')
+  expect(screen.getByRole('link', { name: 'Admin' })).toHaveAttribute('href', '/admin')
+})
+
+test('students and canteen staff do not get the Admin link', () => {
+  expect(NAV_LINKS.student.some((l) => l.to === '/admin')).toBe(false)
+  expect(NAV_LINKS.canteen.some((l) => l.to === '/admin')).toBe(false)
+})
+
 test('renders every configured link for each role', () => {
   Object.entries(NAV_LINKS).forEach(([role, links]) => {
     const { unmount } = (() => {
