@@ -22,7 +22,7 @@ Set in `.env` locally (git-ignored), in the Vercel project settings for the web 
 | --- | --- | --- |
 | `VITE_SUPABASE_URL` | yes | Supabase project URL (Project Settings -> API). |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | yes | Supabase publishable (anon) key. Never use the service-role key in the app. |
-| `VITE_DEMO_MODE` | no | `true` allows sample menu data when Supabase is unreachable, even in a production build. Keep `false` (or unset) in production. |
+| `VITE_DEMO_MODE` | no | `true` allows sample menu data when Supabase is unreachable **and bypasses the auth/role guards** (fake admin user). Demo only: never set it in a production build. |
 | `VITE_APP_URL` | recommended | Public URL of the deployed web app, no trailing slash (e.g. `https://your-app.vercel.app`). Used for the password-reset link. Inside the Android app `window.location.origin` is `localhost`, so without this the emailed link would point at localhost. |
 
 If the Supabase variables are missing the app still boots against a placeholder URL, but every request fails.
