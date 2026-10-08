@@ -110,3 +110,8 @@ Same completed-orders / Asia/Manila / inclusive-range rules as above. `p_limit` 
 
 ## Signup role clamp
 `handle_new_user()` (migration 20261008000004) only honours `student` and `canteen` from signup metadata; any other value (including `admin`) becomes `student`. Promote admins with `admin_set_user_role`.
+
+## Hardening (20261008000005)
+- Orders and order_items can only be created via `place_order()`; the direct-INSERT policies are dropped.
+- Canteen/admin can only update orders that are not already `cancelled`/`completed`, and can never set `cancelled` directly (use `cancel_order()` so stock is restored).
+- Non-admin callers with a JWT may only INSERT `student` profiles and may not DELETE profiles; the last admin cannot be deleted.
