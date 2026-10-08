@@ -14,6 +14,7 @@ export const NAV_LINKS = {
     { to: '/menu', label: 'Menu' },
     { to: '/canteen-orders', label: 'Orders' },
     { to: '/canteen-menu', label: 'Manage Menu' },
+    { to: '/admin', label: 'Admin' },
   ],
 }
 
